@@ -7,6 +7,6 @@ Guides
 ---
 Этот раздел содержит примеры использования JFW
 
-* [Construct][construct]
-* [Map][map]
-* [List][list]
+* [Construct](#construct)
+* [Map](#map)
+* [List](#list)
