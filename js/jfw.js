@@ -154,6 +154,7 @@
 			*	@returns Значение свойства или объект со всеми свойствами
 			*/
 			attr: function(key, val){
+				if (typeof key == 'number') key = String(key);
 				/*
 				*	Если аргументы не установленны - то возвращаем объект
 				*/
@@ -218,6 +219,7 @@
 			*	@param {String} key Название свойства
 			*/
 			removeAttr: function(key) {
+				if (typeof key == 'number') key = String(key);
 				var index = this.keys.indexOf(key);
 				if (index < 0) return;
 				this.keys.splice(index, 1);
@@ -318,6 +320,16 @@
 	*/
 	fw.Map.extend = map;
 
+	/*
+	*	Создает новый класс List
+	*
+	*	@see fw.Map.extend
+	*	@private
+	*	@param {Object} ext Объект который будет расширять класс
+	*	@param {Object} stat Статические свойства класса
+	*	@param {Object} default_param Свойства и методы List объекта
+	*	@returns {Function} Функция конструктор класса List
+	*/
 	var list = function(ext, stat, default_param){
 		if (typeof default_param == 'undefined') {
 			default_param = stat;
@@ -333,22 +345,40 @@
 		default_param = default_param || {};
 
 		return fw.Map.extend({
+			/*
+			*	Добавляет новый элемент в конец списка
+			*
+			*	@see Array.prototype.push
+			*	@param val Значение добавляемое в конец листа
+			*/
 			push: function(val) {
-				this.attr(String(this.length++), val);
+				this.attr(this.length++, val);
 			},
+			/*
+			*	Извлекает последний элемент из списка
+			*
+			*	@see Array.prototype.pop
+			*	@returns Извлекаемое значение
+			*/
 			pop: function() {
-				var val = this.attr(String(this.length-1));
-				this.removeAttr(String(this.length-1));
+				var val = this.attr(this.length-1);
+				this.removeAttr(this.length-1);
 				this.length--;
 				return val;
 			},
+			/*
+			*	Извлекает первый элемент из списка
+			*
+			*	@see Array.prototype.shift
+			*	@returns Извлекаемое значение
+			*/
 			shift: function() {
-				var val = this.attr('0');
-				this.removeAttr('0');
+				var val = this.attr(0);
+				this.removeAttr(0);
 				for (var i = 1; i < this.length; i++) {
 					this[i-1] = this[i];
 				}
-				delete this[String(this.length-1)];
+				delete this[this.length-1];
 				this.length--;
 				return val;
 			}
@@ -370,8 +400,23 @@
 		});
 	};
 
+	/*
+	*	Экземпляр List
+	*
+	*	@constructor
+	*	@see list
+	*/
 	fw.List = list();
 
+	/*
+	*	Создает новый класс List
+	*
+	*	@see list
+	*	@param {Object} ext Объект который будет расширять класс
+	*	@param {Object} stat Статические свойства класса
+	*	@param {Object} default_param Свойства и методы List объекта
+	*	@returns {Function} Функция конструктор класса List
+	*/
 	fw.List.extend = list;
 
 	fw.utils = utils;
