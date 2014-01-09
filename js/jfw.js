@@ -2,22 +2,16 @@
 	JavaScript Framework
 	for single page application
 
-	@title some title
-	@overview This is the overview
-	@copyright (c) 2014 Blah Blah Blah
-	@license MIT
+	@version 0.0.1
 	@author andrey prih <prihmail@gmail.com>
 */
 
 (function(){
-	/** @namespace fw {Object} */
 	var fw = window.fw || {};
-	/** @namespace fw.utils {Object} */
 	var utils = fw.utils || {};
 
 	/**
 		Простое наследование свойств
-		@memberof fw.utils
 		@param {Object} child Объект наследник
 		@param {Object} parent Расширяемый объект
 	*/
@@ -27,12 +21,8 @@
 		}
 	};
 
-	/** @namespace fw.Construct */
-
 	/**
 		Создание нового класса
-		@constructor
-		@memberof fw
 		@param {Object} stat Статические свойства класса
 		@param {Object} param Свойства и методы объектов
 		@return {Function} Функция конструктор класса
@@ -43,7 +33,6 @@
 
 	/**
 		Создание нового класса с возможностью
-		@memberof fw.Construct
 		@param {Object} ext Объект который будет расширять класс
 		@param {Object} stat Статические свойства класса
 		@param {Object} param Свойства и методы объектов
@@ -150,8 +139,7 @@
 		var map_proto = {
 			/**
 				Добавляет или изменяет значение свойства
-				@memberof fw.Map
-				@param {String|Object} key Название свойства
+				@param {String|Number|Object} key Название свойства
 				@param val Значение свойства
 				@returns Значение свойства или объект со всеми свойствами
 			*/
@@ -207,7 +195,6 @@
 			/**
 				Итератор для Map объекта,
 				перечесляет все свойства заданные при создании объекта или с помощью attr
-				@memberof fw.Map
 				@param {Function} cb Функция итератора
 			*/
 			each: function(cb) {
@@ -217,7 +204,6 @@
 			},
 			/**
 				Удаляет указанное свойство у объекта
-				@memberof fw.Map
 				@param {String} key Название свойства
 			*/
 			removeAttr: function(key) {
@@ -233,7 +219,6 @@
 			},
 			/**
 				Устанавливает функцию обработчик указанного события у объекта Map
-				@memberof fw.Map
 				@param {String} type Тип события или название свойства объекта Map
 				@param {Function} cb Функция обработчик события
 			*/
@@ -250,7 +235,6 @@
 			},
 			/**
 				Удаляет все обработчики указанного события у объекта Map
-				@memberof fw.Map
 				@param {String} type Тип события или название свойства объекта Map
 				@param {Function} cb Функция обработчик события
 			*/
@@ -303,11 +287,8 @@
 		});
 	};
 
-	/** @namespace fw.Map */
-
 	/**
-		Экземпляр Map
-		@memberof fw
+		Map
 		@constructor
 		@see fw.Map.extend
 	*/
@@ -316,16 +297,11 @@
 
 	/**
 		Создание нового класса Map
-		@memberof fw.Map
 		@see map
 		@param {Object} ext Объект который будет расширять класс
 		@param {Object} stat Статические свойства класса
 		@param {Object} default_param Свойства и методы Map объекта
 		@returns {Function} Функция конструктор класса Map
-		@example
-		for (var i in arr) {
-			console.log(msg);
-		}
 	*/
 	fw.Map.extend = map;
 
@@ -356,7 +332,6 @@
 			/**
 				Добавляет новый элемент в конец списка
 				@see Array.prototype.push
-				@memberof fw.List
 				@param val Значение добавляемое в конец листа
 			*/
 			push: function(val) {
@@ -365,7 +340,6 @@
 			/**
 				Извлекает последний элемент из списка
 				@see Array.prototype.pop
-				@memberof fw.List
 				@returns Извлекаемое значение
 			*/
 			pop: function() {
@@ -377,7 +351,6 @@
 			/**
 				Извлекает первый элемент из списка
 				@see Array.prototype.shift
-				@memberof fw.List
 				@returns Извлекаемое значение
 			*/
 			shift: function() {
@@ -408,19 +381,15 @@
 		});
 	};
 
-	/** @namespace fw.List */
-
 	/**
-		Экземпляр List
+		List
 		@constructor
-		@memberof fw
 		@see list
 	*/
 	fw.List = list();
 
 	/**
 		Создает новый класс List
-		@memberof fw.List
 		@see list
 		@param {Object} ext Объект который будет расширять класс
 		@param {Object} stat Статические свойства класса
