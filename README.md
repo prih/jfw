@@ -54,6 +54,8 @@ console.log(Foo.stat1); // 123
 * [static properties](#constructor-static)
 * [extends object](#constructor-extends)
 
+---
+
 #### fw.Construct.extend
 
 Используется для создания класса:
