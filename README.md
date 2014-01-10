@@ -182,7 +182,7 @@ console.log(map.some_key); // 444
 console.log(map.attr()); // Object { bar: 333, some_key: 444 }
 ```
 
-Map построен на базе [Construct](#fwconstruct) и обладает теми же свойствами:
+[Map](#fwmap) построен на базе [Construct](#fwconstruct) и обладает теми же свойствами:
 ``` js
 var Map = Map.extend({}, { foo: 1, bar: 2 });
 var map1 = new Map();
