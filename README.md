@@ -178,4 +178,51 @@ map.attr('some_key', 222);
 // undefined 222
 map.attr('some_key', 444);
 // 222 444
+console.log(map.some_key); // 444
+console.log(map.attr()); // Object { bar: 333, some_key: 444 }
+```
+
+Map построен на базе [Construct](#fwconstruct) и обладает теми же свойствами:
+``` js
+var Map = Map.extend({}, { foo: 1, bar: 2 });
+var map1 = new Map();
+console.log(map1.foo); // 1
+console.log(map1.bar); // 2
+```
+
+``` js
+var Map = Map.extend({}, { static_key: 777 }, { foo: 1, bar: 2 });
+console.log(Map.static_key); // 777
+```
+
+``` js
+var Map = Map.extend({ parent_key: 555 }, { foo: 1, bar: 2 });
+var map1 = new Map();
+console.log(map1.foo); // 1
+console.log(map1.parent_key); // 555
+```
+
+так же имеется свой init:
+``` js
+var Map = Map.extend({}, { foo: 1, init: function(){
+	console.log('map init');
+}});
+var map1 = new Map();
+// map init
+console.log(map1.foo); // 1
+console.log(map1.attr()); // Object { foo: 1 }
+```
+
+#### fw.Map attr
+``` js
+var map = new Map({ foo: 'some_val', bar: 123 });
+console.log(map.foo); // some_val
+console.log(map.bar); // 123
+console.log(map.attr('foo')); // some_val
+console.log(map.attr('bar')); // 123
+console.log(map.attr()); // Object { foo: 'some_val', bar: 123 }
+console.log(map.keys); // ["foo", "bar"]
+console.log(map.attr('foo', 777));
+console.log(map.attr('foo')); // 777
+console.log(map.foo); // 777
 ```
