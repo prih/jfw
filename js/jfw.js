@@ -49,6 +49,7 @@
 		}
 
 		ext = ext || {};
+		param = param || {};
 
 		var Construct = function(){
 			if (typeof param.init == 'function') {
