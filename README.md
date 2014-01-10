@@ -178,6 +178,7 @@ map.attr('some_key', 222);
 // undefined 222
 map.attr('some_key', 444);
 // 222 444
+// some_key set 222 444
 console.log(map.some_key); // 444
 console.log(map.attr()); // Object { bar: 333, some_key: 444 }
 ```
