@@ -155,7 +155,7 @@ fw.Map.extend([extendObject,] mapProperties) -> {Function}
 fw.Map.extend([extendObject,staticProperties,] mapProperties) -> {Function}
 ```
 
-Реализует шаблон проектирования [Observer](http://ru.wikipedia.org/wiki/%D0%9D%D0%B0%D0%B1%D0%BB%D1%8E%D0%B4%D0%B0%D1%82%D0%B5%D0%BB%D1%8C_(%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F)). Создает механизм у класса, который позволяет получать оповещения о изменении состояния объекта. Базируется на [fw.Construct](#fwconstruct).
+Реализует шаблон проектирования [Observer](http://ru.wikipedia.org/wiki/%D0%9D%D0%B0%D0%B1%D0%BB%D1%8E%D0%B4%D0%B0%D1%82%D0%B5%D0%BB%D1%8C_(%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F). Создает механизм у класса, который позволяет получать оповещения о изменении состояния объекта. Базируется на [fw.Construct](#fwconstruct).
 
 Пример:
 ``` js
@@ -185,19 +185,19 @@ console.log(map.attr()); // Object { bar: 333, some_key: 444 }
 
 [Map](#fwmap) построен на базе [Construct](#fwconstruct) и обладает теми же свойствами:
 ``` js
-var Map = Map.extend({}, { foo: 1, bar: 2 });
+var Map = fw.Map.extend({}, { foo: 1, bar: 2 });
 var map1 = new Map();
 console.log(map1.foo); // 1
 console.log(map1.bar); // 2
 ```
 
 ``` js
-var Map = Map.extend({}, { static_key: 777 }, { foo: 1, bar: 2 });
+var Map = fw.Map.extend({}, { static_key: 777 }, { foo: 1, bar: 2 });
 console.log(Map.static_key); // 777
 ```
 
 ``` js
-var Map = Map.extend({ parent_key: 555 }, { foo: 1, bar: 2 });
+var Map = fw.Map.extend({ parent_key: 555 }, { foo: 1, bar: 2 });
 var map1 = new Map();
 console.log(map1.foo); // 1
 console.log(map1.parent_key); // 555
@@ -205,7 +205,7 @@ console.log(map1.parent_key); // 555
 
 так же имеется свой init:
 ``` js
-var Map = Map.extend({}, { foo: 1, init: function(){
+var Map = fw.Map.extend({}, { foo: 1, init: function(){
 	console.log('map init');
 }});
 var map1 = new Map();
@@ -216,7 +216,7 @@ console.log(map1.attr()); // Object { foo: 1 }
 
 #### fw.Map attr
 ``` js
-var map = new Map({ foo: 'some_val', bar: 123 });
+var map = new fw.Map({ foo: 'some_val', bar: 123 });
 console.log(map.foo); // some_val
 console.log(map.bar); // 123
 console.log(map.attr('foo')); // some_val
