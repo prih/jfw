@@ -183,7 +183,7 @@ console.log(map.some_key); // 444
 console.log(map.attr()); // Object { bar: 333, some_key: 444 }
 ```
 
-[Map](#fwmap) построен на базе [Construct](#fwconstruct) и обладает теми же свойствами:
+[Map](#fwmap) построен на базе [Construct](#fwconstruct) и обладает теми же способностями:
 ``` js
 var Map = fw.Map.extend({}, { foo: 1, bar: 2 });
 var map1 = new Map();
@@ -191,11 +191,13 @@ console.log(map1.foo); // 1
 console.log(map1.bar); // 2
 ```
 
+статические свойства:
 ``` js
 var Map = fw.Map.extend({}, { static_key: 777 }, { foo: 1, bar: 2 });
 console.log(Map.static_key); // 777
 ```
 
+наследование от объекта:
 ``` js
 var Map = fw.Map.extend({ parent_key: 555 }, { foo: 1, bar: 2 });
 var map1 = new Map();
@@ -215,6 +217,8 @@ console.log(map1.attr()); // Object { foo: 1 }
 ```
 
 #### fw.Map attr
+
+Для манипуляции свойствами объектов Map, используется метод *attr*. Только используя его возможно получить генерацию событий:
 ``` js
 var map = new fw.Map({ foo: 'some_val', bar: 123 });
 console.log(map.foo); // some_val
@@ -229,6 +233,8 @@ console.log(map.foo); // 777
 ```
 
 #### fw.Map removeAttr
+
+удаление свойств:
 ``` js
 var map = new fw.Map({ foo: 'some_val', bar: 123 });
 console.log(map.attr()); // Object { foo: 'some_val', bar: 123 }
@@ -237,6 +243,8 @@ console.log(map.attr()); // Object { bar: 123 }
 ```
 
 #### fw.Map each
+
+простейший итератор:
 ``` js
 var map = new fw.Map({ foo: 'some_val', bar: 123 });
 map.each(function(key, val){
@@ -247,6 +255,8 @@ map.each(function(key, val){
 ```
 
 #### fw.Map bind/unbind
+
+установка/удаление обработчиков событий:
 ``` js
 var map = new fw.Map();
 
@@ -276,6 +286,7 @@ map.attr('foo', 'bar');
 // foo -> test bar
 ```
 
+обработчиков может быть несколько, вызыватся они будут по очереди. Удаление обработчиков возможно как всех сразу, так и конкретной функции, указав её вторым параметром:
 ``` js
 var map = new fw.Map();
 
