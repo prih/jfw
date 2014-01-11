@@ -327,9 +327,9 @@
 		}
 
 		ext = ext || {};
-		default_param = default_param || {};
+		default_param = default_param || [];
 
-		return fw.Map.extend({
+		var list_proto = {
 			/**
 				Добавляет новый элемент в конец списка
 				@see Array.prototype.push
@@ -364,8 +364,13 @@
 				this.length--;
 				return val;
 			}
-		}, {
+		};
+
+		utils.simpleExtend(ext, list_proto);
+
+		return fw.Map.extend(ext, stat, {
 			init: function(param){
+				utils.simpleExtend(this, default_param);
 				this.length = 0;
 				if (param instanceof Array) {
 					this.length = param.length;
