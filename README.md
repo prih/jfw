@@ -227,3 +227,74 @@ console.log(map.attr('foo', 777));
 console.log(map.attr('foo')); // 777
 console.log(map.foo); // 777
 ```
+
+#### fw.Map removeAttr
+``` js
+var map = new fw.Map({ foo: 'some_val', bar: 123 });
+console.log(map.attr()); // Object { foo: 'some_val', bar: 123 }
+map.removeAttr('foo');
+console.log(map.attr()); // Object { bar: 123 }
+```
+
+#### fw.Map each
+``` js
+var map = new fw.Map({ foo: 'some_val', bar: 123 });
+map.each(function(key, val){
+	console.log((this instanceof Map), key, val);
+});
+// true foo some_val
+// true bar 123
+```
+
+#### fw.Map bind/unbind
+``` js
+var map = new fw.Map();
+
+map.bind('change', function(key, how, old_val, new_val){
+	console.log('change ->', key, how, old_val, new_val);
+});
+map.bind('foo', function(old_val, new_val){
+	console.log('foo ->', old_val, new_val);
+});
+
+map.attr('abc', 123);
+// change -> abc add undefined 123
+map.attr('abc', 456);
+// change -> abc set 123 456
+map.removeAttr('abc');
+// change -> abc remove 456 undefined
+
+map.attr('foo', 'bar');
+// foo -> undefined bar
+// change -> foo add undefined bar
+map.attr('foo', 'test');
+// foo -> bar test
+// change -> foo set bar test
+
+map.unbind('change');
+map.attr('foo', 'bar');
+// foo -> test bar
+```
+
+``` js
+var map = new fw.Map();
+
+var change_handler1 = function(key, how, old_val, new_val) {
+	console.log('map change 1');
+};
+var change_handler2 = function(key, how, old_val, new_val) {
+	console.log('map change 2');
+};
+
+map.bind('change', change_handler1);
+map.bind('change', change_handler2);
+
+map.attr('foo', 123);
+// map change 1
+// map change 2
+
+map.unbind('change', change_handler1);
+
+map.attr('foo', 456);
+// map change 2
+```
