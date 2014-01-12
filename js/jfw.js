@@ -80,38 +80,12 @@
 		length: 0
 	};
 
-	/**
-		Тригер обработки событий связанных с конкретным элементом Map
-		@private
-		@see fw.Map.extend
-		@param {String} key Название свойства
-		@param old_val Старое значение или undefined
-		@param new_val Новое значение свойства 
-	*/
-	var map_event_trigger = function(key, old_val, new_val) {
-		if(typeof map_events[this.__id][key] != 'undefined') {
-			for (var i = 0; i < map_events[this.__id][key].length; i++) {
-				map_events[this.__id][key][i].call(this, old_val, new_val);
-			}
-		}
-	};
-
-	/**
-		Тригер обработки событий Map
-		@private
-		@see fw.Map.extend
-		@param {String} type Название обработчика
-		@param {String} key Название свойства
-		@param {String} how Тип события
-		@param old_val Старое значение или undefined
-		@param new_val Новое значение свойства 
-	*/
-	var map_event_trigger_ext = function(type, key, how, old_val, new_val) {
-		if(typeof map_events[this.__id][type] != 'undefined') {
-			for (var i = 0; i < map_events[this.__id][type].length; i++) {
-				map_events[this.__id][type][i].call(this, key, how, old_val, new_val);
-			}
-		}
+	var MapEvent = function(how, key, old_val, new_val) {
+		this.how = how;
+		this.key = key;
+		this.old_val = old_val;
+		this.new_val = new_val;
+		this.stopPropagation = false;
 	};
 
 	/**
@@ -171,8 +145,7 @@
 						var old_val = this[key];
 						this[key] = val;
 
-						map_event_trigger.call(this, key, old_val, val);
-						map_event_trigger_ext.call(this, 'change', key, how, old_val, val);
+						this.trigger(how, key, old_val, new_val);
 					}
 				}
 				/**
@@ -188,8 +161,7 @@
 						var old_val = this[i];
 						this[i] = key[i];
 
-						map_event_trigger.call(this, i, old_val, val);
-						map_event_trigger_ext.call(this, 'change', i, how, old_val, key[i]);
+						this.trigger(how, i, old_val, key[i]);
 					}
 				}
 			},
@@ -215,8 +187,7 @@
 				var old_val = this[key];
 				delete this[key];
 
-				map_event_trigger.call(this, key, old_val, undefined);
-				map_event_trigger_ext.call(this, 'change', key, 'remove', old_val, undefined);
+				this.trigger('remove', key, old_val, undefined);
 			},
 			/**
 				Устанавливает функцию обработчик указанного события у объекта Map
@@ -251,6 +222,37 @@
 								return;
 							}
 						}
+					}
+				}
+			},
+			/**
+				Тригер обработки событий Map
+				@param {String} how Тип события
+				@param {String} key Название свойства
+				@param old_val Старое значение или undefined
+				@param new_val Новое значение свойства
+			*/
+			trigger: function(how, key, old_val, new_val) {
+				var eventObj = null;
+				if (typeof map_events[this.__id][key] != 'undefined') {
+					eventObj = new MapEvent(how, key, old_val, new_val);
+					for (var i = 0; i < map_events[this.__id][key].length; i++) {
+						map_events[this.__id][key][i].call(this, eventObj);
+						if (eventObj.stopPropagation) return;
+					}
+				}
+				if (typeof map_events[this.__id][how] != 'undefined') {
+					eventObj = eventObj || new MapEvent(how, key, old_val, new_val);
+					for (var i = 0; i < map_events[this.__id][how].length; i++) {
+						map_events[this.__id][how][i].call(this, eventObj);
+						if (eventObj.stopPropagation) return;
+					}
+				}
+				if (typeof map_events[this.__id]['change'] != 'undefined') {
+					eventObj = eventObj || new MapEvent('change', key, old_val, new_val);
+					for (var i = 0; i < map_events[this.__id]['change'].length; i++) {
+						map_events[this.__id]['change'][i].call(this, eventObj);
+						if (eventObj.stopPropagation) return;
 					}
 				}
 			}
@@ -355,14 +357,72 @@
 				@returns Извлекаемое значение
 			*/
 			shift: function() {
-				var val = this.attr(0);
-				this.removeAttr(0);
-				for (var i = 1; i < this.length; i++) {
-					this[i-1] = this[i];
+				var ret = Array.prototype.shift.apply(this);
+				this.trigger('remove', '0', ret, undefined);
+				return ret;
+			},
+			unshift: function() {
+				var ret = Array.prototype.unshift.apply(this, arguments);
+				if (arguments.length > 1) {
+					var new_val = Array.prototype.slice.call(arguments, 0, arguments.length);
+					this.trigger('add', '0', undefined, new_val);
+				} else if (arguments.length == 1) {
+					this.trigger('add', '0', undefined, arguments[0]);
 				}
-				delete this[this.length-1];
-				this.length--;
-				return val;
+				return ret;
+			},
+			/**
+				Возвращает часть списка в виде нового
+				@see Array.prototype.slice
+				@param {Number} start Индекс элемента, с которого будет начинается новый список
+				@param {Number} [end] Индекс элемента, на котором новый список завершится
+				@return {Object} Новый список
+			*/
+			slice: function(start, end) {
+				arguments[0] = arguments[0] || 0;
+				arguments[1] = arguments[1] || this.length;
+				var ret_arr = Array.prototype.slice.apply(this, arguments);
+				var ret = new fw.List(ret_arr);
+				return ret;
+			},
+			/**
+				Удаляет часть списка, заменяет новыми элементами
+				@see Array.prototype.splice
+				@param {Number} start Индекс элемента, с которого начать удаление
+				@param {Number} count Кол-во элементов, которое требуется удалить
+				@param Добавляемые элементы, добавление начинается с позиции start
+				@return {Object} Новый список удаленных элементов
+			*/
+			splice: function(start, count) {
+				arguments[0] = arguments[0] || 0;
+				arguments[1] = arguments[1] || this.length;
+				var ret_arr = Array.prototype.splice.apply(this, arguments);
+
+				this.keys = [];
+				for (var i = 0; i < this.length; i++) {
+					this.keys.push(i);
+				}
+				
+				this.trigger('remove', start, ret_arr, undefined);
+				if (arguments.length > 2) {
+					var new_val = Array.prototype.slice.call(arguments, 2, arguments.length);
+					this.trigger('add', start, undefined, new_val);
+				}
+				var ret = new fw.List(ret_arr);
+				return ret;
+			},
+			indexOf: function() {
+				return Array.prototype.indexOf.apply(this, arguments);
+			},
+			join: function() {
+				return Array.prototype.join.apply(this, arguments);
+			},
+			forEach: function() {
+				Array.prototype.forEach.apply(this, arguments);
+			},
+			concat: function() {
+				var arr = Array.prototype.slice.call(this, 0, this.length);
+				return new fw.List(Array.prototype.concat.apply(arr, arguments));
 			}
 		};
 
