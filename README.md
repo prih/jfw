@@ -9,7 +9,6 @@ Install
 <html>
 <head>
 	<title></title>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jfw.js"></script>
 </head>
 <body>
@@ -24,6 +23,7 @@ Guides
 * [Construct](#fwconstruct)
 * [Map](#fwmap)
 * [List](#fwlist)
+* [compute](#fwcompute)
 
 ### fw.Construct
 
@@ -161,17 +161,18 @@ fw.Map.extend([extendObject,staticProperties,] mapProperties) -> {Function}
 * [removeAttr](#fwmap-removeattr)
 * [each](#fwmap-each)
 * [bind/unbind](#fwmap-bindunbind)
+* [trigger](#fwmap-trigger)
 
 Пример:
 ``` js
 var map = new fw.Map();
 map.attr('foo', 5);
 console.log(map.attr('foo')); // 5
-map.bind('change', function(key, how, old_val, new_val){
-	console.log(key, how, old_val, new_val);
+map.bind('change', function(e){
+	console.log(e.key, e.how, e.old_val, e.new_val);
 });
-map.bind('some_key', function(old_val, new_val){
-	console.log(old_val, new_val);
+map.bind('some_key', function(e){
+	console.log(e.old_val, e.new_val);
 });
 map.attr('foo', 777);
 // foo set 5 777
@@ -249,7 +250,7 @@ console.log(map.attr()); // Object { bar: 123 }
 
 #### fw.Map each
 
-простейший итератор:
+итератор each:
 ``` js
 var map = new fw.Map({ foo: 'some_val', bar: 123 });
 map.each(function(key, val){
@@ -265,11 +266,11 @@ map.each(function(key, val){
 ``` js
 var map = new fw.Map();
 
-map.bind('change', function(key, how, old_val, new_val){
-	console.log('change ->', key, how, old_val, new_val);
+map.bind('change', function(e){
+	console.log('change ->', e.key, e.how, e.old_val, e.new_val);
 });
-map.bind('foo', function(old_val, new_val){
-	console.log('foo ->', old_val, new_val);
+map.bind('foo', function(e){
+	console.log('foo ->', e.old_val, e.new_val);
 });
 
 map.attr('abc', 123);
@@ -295,10 +296,10 @@ map.attr('foo', 'bar');
 ``` js
 var map = new fw.Map();
 
-var change_handler1 = function(key, how, old_val, new_val) {
+var change_handler1 = function() {
 	console.log('map change 1');
 };
-var change_handler2 = function(key, how, old_val, new_val) {
+var change_handler2 = function() {
 	console.log('map change 2');
 };
 
@@ -313,4 +314,103 @@ map.unbind('change', change_handler1);
 
 map.attr('foo', 456);
 // map change 2
+```
+
+#### fw.Map trigger
+
+Вызывает событие:
+``` js
+var map = new fw.Map();
+map.bind('set', function(e){
+	console.log(e.how, e.key, e.old_val, e.new_val);
+});
+
+map.trigger('set', 'some_key', 123, 456);
+// set some_key 123 456
+```
+
+---
+
+### fw.List
+
+```
+new fw.List(listProperties) -> {Object}
+new fw.List([extendObject,] listProperties) -> {Object}
+new fw.List([extendObject,staticProperties,] listProperties) -> {Object}
+fw.List.extend(listProperties) -> {Function}
+fw.List.extend([extendObject,] listProperties) -> {Function}
+fw.List.extend([extendObject,staticProperties,] listProperties) -> {Function}
+```
+
+Создает [Map](#fwmap), похожий на Array:
+``` js
+var list = new fw.List(1,2,3);
+console.log(list); // [1, 2, 3]
+
+list.push(4);
+console.log(list); // [1, 2, 3, 4]
+console.log(list.keys); // ["0", "1", "2", "3"]
+
+list.bind('add', function(e){
+	console.log('add ->', e.key, e.new_val);
+});
+
+list.unshift(777);
+// add -> 0 777
+
+console.log(list); // [777, 1, 2, 3, 4]
+console.log(list.length); // 5
+```
+
+В отличае от простого Map доступны следующие свойства, синтаксис такой же как и в Array:
+
+* pop
+* push
+* shift
+* unshift
+* slice
+* splice
+* indexOf
+* join
+* forEach
+* concat
+
+### fw.compute
+
+```
+fw.compute(value [, extendObject]) -> {Function}
+```
+
+Создает функцию реализующую "наблюдаемое" значение:
+
+``` js
+var comp = fw.compute(123);
+console.log(comp()); // 123
+comp(456);
+console.log(comp()); // 456
+
+comp.on('change', function(e){
+	console.log(e.old_val, e.new_val);
+});
+
+comp(789);
+// 456 789
+
+comp.off('change');
+```
+
+Функции on и off являются псевдонимами bind и unbind соответственно. Так же имеется функция trigger.
+
+``` js
+var comp = fw.compute(123);
+console.log(comp()); // 123
+comp(456);
+console.log(comp()); // 456
+
+comp.on('change', function(e){
+	console.log(e.old_val, e.new_val);
+});
+
+comp.trigger('change', 'val', 456, 789);
+// 456 789
 ```
