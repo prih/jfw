@@ -145,7 +145,7 @@
 						var old_val = this[key];
 						this[key] = val;
 
-						this.trigger(how, key, old_val, new_val);
+						this.trigger(how, key, old_val, val);
 					}
 				}
 				/**
@@ -463,6 +463,35 @@
 		@returns {Function} Функция конструктор класса List
 	*/
 	fw.List.extend = list;
+
+	fw.compute = function(def_val, prop) {
+		prop = prop || {};
+
+		var Map = fw.Map.extend({
+			set: function(val) {
+				this.attr('val', val);
+			},
+			get: function() {
+				return this.attr('val');
+			}
+		}, prop);
+
+		var map = new Map({ val: def_val });
+
+		var com = function(val) {
+			if (typeof val != 'undefined') {
+				map.set(val);
+			} else {
+				return map.get();
+			}
+		};
+
+		com.on = map.bind.bind(map);
+		com.off = map.unbind.bind(map);
+		com.trigger = map.trigger.bind(map);
+
+		return com;
+	};
 
 	fw.utils = utils;
 	window.fw = fw;
