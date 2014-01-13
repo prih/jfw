@@ -1,14 +1,36 @@
 <html>
 <head>
 	<title></title>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script type="text/javascript" src="js/jfw.js"></script>
+	<script type="text/javascript" src="js/jfw.core.js"></script>
+	<script type="text/javascript" src="js/jfw.history.js"></script>
+	<script type="text/javascript" src="js/jfw.route.js"></script>
+	<script type="text/javascript" src="js/jfw.ejs.js"></script>
 </head>
 <body>
-
+	
 </body>
 </html>
 
-<script type="text/javascript">
+<script type="text/ejs" id="list_tmp">
+	<ul>
+		<% for(var i in data_list) { %>
+		<li><a href="#test/<%= data_list[i].id %>">Test <%= data_list[i].name %></a></li>
+		<% } %>
+	</ul>
+</script>
 
+<script type="text/javascript">
+	fw.route.add('test/([0-9]+)', function(param){
+		console.log(param);
+	});
+
+	var html = new EJS({ text: document.getElementById('list_tmp').innerHTML });
+	var data = {
+		data_list: [
+			{ id: 1, name: 1 },
+			{ id: 2, name: 2 },
+			{ id: 3, name: 3 }
+		]
+	}
+	document.body.innerHTML = html.render(data);
 </script>
