@@ -1,13 +1,16 @@
 <html>
 <head>
 	<title></title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jfw.core.js"></script>
 	<script type="text/javascript" src="js/jfw.history.js"></script>
 	<script type="text/javascript" src="js/jfw.route.js"></script>
 	<script type="text/javascript" src="js/jfw.ejs.js"></script>
+	<script type="text/javascript" src="js/jfw.view.js"></script>
+	<script type="text/javascript" src="js/jfw.control.js"></script>
 </head>
 <body>
-	
+	<div id="ttt"></div>
 </body>
 </html>
 
@@ -24,13 +27,21 @@
 		console.log(param);
 	});
 
-	var html = new EJS({ text: document.getElementById('list_tmp').innerHTML });
-	var data = {
-		data_list: [
-			{ id: 1, name: 1 },
-			{ id: 2, name: 2 },
-			{ id: 3, name: 3 }
-		]
-	}
-	document.body.innerHTML = html.render(data);
+	var Menu = fw.Control({
+		init: function() {
+			this.append(fw.view('list_tmp', { data_list: [
+				{ id: 1, name: '111' },
+				{ id: 2, name: '222' },
+				{ id: 3, name: '333' }
+			] }));
+		},
+		'li a click': function() {
+			console.log('a click');
+		},
+		'li a mousemove': function() {
+			console.log('a move');
+		}
+	});
+
+	var m = new Menu('#ttt');
 </script>

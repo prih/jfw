@@ -6,7 +6,7 @@
 */
 (function(){
 	if (!fw) {
-		console.error('you must first load jfw.base');
+		console.error('you must first load jfw.core');
 		return;
 	}
 
