@@ -12,8 +12,8 @@
 
 	fw.Control = function(param) {
 		return fw.Construct.extend({}, {
-			init: function(selector) {
-				this.element = jQuery(selector);
+			'init': function(selector) {
+				this['element'] = jQuery(selector);
 				if (typeof param.init == 'function') param.init.call(this.element);
 				for (var i in param) {
 					if (i != 'init') {

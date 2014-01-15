@@ -1,3 +1,6 @@
+var jQuery = {};
+jQuery.on;
+
 window.fw = {};
 var fw = {};
 fw.utils = {};
@@ -8,6 +11,11 @@ fw.Map.extend;
 fw.List;
 fw.List.extend;
 fw.compute;
+
+fw.route;
+fw.view;
+fw.Control;
+fw.Model;
 
 var map_proto = {};
 map_proto.attr;
@@ -33,3 +41,6 @@ list_proto.indexOf;
 list_proto.join;
 list_proto.forEach;
 list_proto.concat;
+
+var ejs = {};
+ejs.render;

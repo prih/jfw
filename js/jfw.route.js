@@ -13,13 +13,13 @@
 	var route_rules = {};
 
 	var route = new fw.Map({
-		add: function(rule, handler) {
+		'add': function(rule, handler) {
 			route_rules[rule] = {
 				reg: new RegExp(rule),
 				handler: handler
 			};
 		},
-		remove: function(rule) {
+		'remove': function(rule) {
 			delete route_rules[rule];
 		}
 	});
