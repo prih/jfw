@@ -16,7 +16,7 @@
 	*/
 	utils.simpleExtend = function(child, parent){
 		for (var i in parent) {
-			if (typeof child[i] == 'undefined') child[i] = parent[i];
+			if (typeof child[i] == 'undefined' && i != 'init') child[i] = parent[i];
 		}
 	};
 
@@ -53,9 +53,10 @@
 		var Construct = function(){
 			if (typeof param.init == 'function') {
 				param.init.apply(this, arguments);
+				delete param.init;
 			}
 			for (var i in param) {
-				if (i != 'init') this[i] = param[i];
+				this[i] = param[i];
 			}
 		};
 
@@ -263,6 +264,7 @@
 			'init': function(param){
 				param = param || {};
 				this.keys = [];
+
 				utils.simpleExtend(param, default_param);
 
 				if (typeof default_param.init == 'function') {
@@ -271,10 +273,8 @@
 
 				if (typeof param == 'object') {
 					for (var i in param) {
-						if (i != 'init') {
-							this[i] = param[i];
-							this.keys.push(i);
-						}
+						this[i] = param[i];
+						this.keys.push(i);
 					}
 				}
 
