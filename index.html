@@ -45,4 +45,13 @@
 	});
 
 	var m = new Menu('#ttt');
+
+	var Data = fw.Model({
+		findAll: 'GET ./data/alldata.json',
+		findOne: 'GET ./data/{:id}.json',
+		create: 'POST ./data/new.json',
+		update: 'POST ./data/update_{:id}.json',
+		destroy: 'GET ./data/remove_{:id}.json'
+	});
+
 </script>
