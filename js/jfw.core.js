@@ -20,20 +20,6 @@
 		}
 	};
 
-	utils.buildString = function(str, data) {
-		var ret = str;
-		var re = new RegExp('\{\:(.*?)\}', 'g');
-		var res = null;
-		while ((res = re.exec(str)) != null) {
-			if (typeof data[res[1]] != 'undefined') {
-				ret = ret.replace(res[0], data[res[1]]);
-			} else {
-				ret = ret.replace(res[0], '');
-			}
-		}
-		return ret;
-	};
-
 	/**
 		Создание нового класса
 		@param {Object} stat Статические свойства класса

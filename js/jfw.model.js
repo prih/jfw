@@ -11,15 +11,34 @@
 		return;
 	}
 
+	fw.utils.buildString = function(str, data) {
+		var ret = str;
+		var re = new RegExp('\{\:(.*?)\}', 'g');
+		var res = null;
+		while ((res = re.exec(str)) != null) {
+			if (typeof data[res[1]] != 'undefined') {
+				ret = ret.replace(res[0], data[res[1]]);
+				delete data[res[1]];
+			} else {
+				ret = ret.replace(res[0], '');
+			}
+		}
+		return ret;
+	};
+
 	var AjaxRequest = function(type, url, data_cb) {
 		return function(data, suc, err) {
-			data = data || {};
+			data = data  || this.attr();
+			var str_data = {};
+			for (var i in data) {
+				str_data[i] = data[i];
+			}
 			var ajax_param = {
 				type: type.toUpperCase(),
-				url: fw.utils.buildString(url, data),
+				url: fw.utils.buildString(url, str_data),
 				dataType: 'json',
 				cache: false,
-				data: data
+				data: str_data
 			};
 			if (typeof suc == 'function') ajax_param.success = function(res_data){
 				if (typeof data_cb == 'function') {
@@ -83,6 +102,33 @@
 			});
 		}
 
+		for (var i in param) {
+			var p = param[i].match('^(GET|POST|PUT|DELETE)[\\s]+(.*)$');
+			if (p.length > 2) {
+				switch (i.toLowerCase()) {
+					case 'create':
+						var createFun = AjaxRequest(p[1], p[2]);
+						model_proto.create = function(cb, err) {
+							createFun.call(this, null, cb, err);
+						};
+						break;
+					case 'update':
+						var updateFun = AjaxRequest(p[1], p[2]);
+						model_proto.update = function(cb, err) {
+							updateFun.call(this, null, cb, err);
+						};
+						break;
+					case 'destroy':
+						var destroyFun = AjaxRequest(p[1], p[2]);
+						model_proto.destroy = function(cb, err) {
+							if (!this.id) return;
+							destroyFun.call(this, { id: this.id }, cb, err);
+						};
+						break;
+				}
+			}
+		}
+
 		return fw.Map.extend(model_proto, model_stat, {
 			'init': function() {
 				if (typeof param.init == 'function') {
@@ -91,23 +137,6 @@
 				}
 
 				this.__theNew = true;
-
-				for (var i in param) {
-					var p = param[i].match('^(GET|POST|PUT|DELETE)[\\s]+(.*)$');
-					if (p.length > 2) {
-						switch (i.toLowerCase()) {
-							case 'create':
-								model_proto.create = AjaxRequest(p[1], p[2]);
-								break;
-							case 'update':
-								model_proto.update = AjaxRequest(p[1], p[2]);
-								break;
-							case 'destroy':
-								model_proto.destroy = AjaxRequest(p[1], p[2]);
-								break;
-						}
-					}
-				}
 			}
 		});
 	};
