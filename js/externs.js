@@ -1,5 +1,8 @@
 var jQuery = {};
 jQuery.on;
+jQuery.ajax;
+
+var EJS = {};
 
 window.fw = {};
 var fw = {};
@@ -16,6 +19,7 @@ fw.route;
 fw.view;
 fw.Control;
 fw.Model;
+fw.EJS;
 
 var map_proto = {};
 map_proto.attr;
@@ -27,6 +31,8 @@ map_proto.trigger;
 
 var param = {};
 param.init;
+param.findAll;
+param.findOne;
 var default_param = {};
 default_param.init;
 
@@ -44,3 +50,19 @@ list_proto.concat;
 
 var ejs = {};
 ejs.render;
+
+var model_proto = {};
+model_proto.save;
+model_proto.create;
+model_proto.update;
+model_proto.destroy;
+this.__theNew;
+
+var ajax_param = {};
+ajax_param.type;
+ajax_param.url;
+ajax_param.dataType;
+ajax_param.cache;
+ajax_param.data;
+ajax_param.success;
+ajax_param.error;

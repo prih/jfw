@@ -1,5 +1,10 @@
 (function(){
     
+var fw = window.fw;
+if (!fw) {
+	console.error('you must first load jfw.core');
+	return;
+}
 
 var rsplit = function(string, regex) {
 	var result = regex.exec(string),retArr = new Array(), first_idx, last_idx, first_bit;
@@ -32,7 +37,7 @@ extend = function(d, s){
 }
 
 
-EJS = function( options ){
+var EJS = function( options ){
 	options = typeof options == "string" ? {view: options} : options
     this.set_options(options);
 	if(options.precompiled){
@@ -80,6 +85,8 @@ EJS = function( options ){
 	EJS.update(this.name, this);
 	this.template = template;
 };
+
+fw.EJS = EJS;
 /* @Prototype*/
 EJS.prototype = {
 	/**
@@ -362,12 +369,12 @@ EJS.Compiler.prototype = {
 				var error = JSLINT.errors[i];
 				if(error.reason != "Unnecessary semicolon."){
 					error.line++;
-					var e = new Error();
-					e.lineNumber = error.line;
-					e.message = error.reason;
+					var te = new Error();
+					te.lineNumber = error.line;
+					te.message = error.reason;
 					if(options.view)
-						e.fileName = options.view;
-					throw e;
+						te.fileName = options.view;
+					throw te;
 				}
 			}
 		}else{

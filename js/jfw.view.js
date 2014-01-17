@@ -17,7 +17,7 @@
 		} else {
 			var tpl = null;
 			if (tpl = document.getElementById(template)) {
-				ejs = new EJS({ text: tpl.innerHTML });
+				ejs = new fw.EJS({ text: tpl.innerHTML });
 			}
 		}
 		if (ejs) {
