@@ -14,7 +14,7 @@
 		return fw.Construct.extend({}, {
 			'init': function(selector) {
 				this['element'] = jQuery(selector);
-				if (typeof param.init == 'function') param.init.call(this.element);
+				if (typeof param.init == 'function') param.init.call(this);
 				for (var i in param) {
 					if (i != 'init') {
 						var p = i.match('^(.*)\\s(.*)$');
