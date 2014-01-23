@@ -19,7 +19,7 @@
 					if (i != 'init') {
 						var p = i.match('^(.*)\\s(.*)$');
 						if (p.length > 2) {
-							jQuery(p[1], this.element).on(p[2], param[i]);
+							jQuery(this.element).on(p[2], p[1], param[i]);
 						}
 					}
 				}

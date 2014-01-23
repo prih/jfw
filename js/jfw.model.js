@@ -85,7 +85,7 @@
 				if (typeof res_json.data != 'undefined') {
 					for (var i in res_json.data) {
 						var obj = new RowsMap(res_json.data[i]);
-						ret.push(obj);
+						ret[i] = obj;
 					}
 				}
 				return ret;
