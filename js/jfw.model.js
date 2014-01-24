@@ -26,6 +26,14 @@
 		return ret;
 	};
 
+	fw.utils.getFormData = function(form) {
+		var ret = {};
+		jQuery(form).serializeArray().forEach(function(obj){
+			ret[obj.name] = obj.value;
+		});
+		return ret;
+	};
+
 	var AjaxRequest = function(type, url, data_cb) {
 		return function(data, suc, err) {
 			data = data  || this.attr();
