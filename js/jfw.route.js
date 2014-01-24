@@ -24,8 +24,6 @@
 		}
 	});
 
-	route.attr('hash', window.location.hash);
-
 	window.onpopstate = function() {
 		route.attr('hash', window.location.hash);
 	};
@@ -40,6 +38,8 @@
 			}
 		}
 	});
+
+	route.attr('hash', window.location.hash);
 
 	fw.route = route;
 })(window);
