@@ -33,7 +33,7 @@
 			if(route_rules[i].reg.test(this.hash.replace(/^#/, ''))) {
 				var param = this.hash.match(i);
 				param = Array.prototype.slice.call(param, 1, param.length);
-				route_rules[i].handler.call(this, param);
+				route_rules[i].handler.call(this, param, e);
 				break;
 			}
 		}
