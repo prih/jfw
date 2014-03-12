@@ -6,6 +6,7 @@
 */
 (function(){
 	var fw = window.fw;
+	
 	if (!fw) {
 		console.error('you must first load jfw.core');
 		return;

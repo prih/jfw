@@ -5,6 +5,8 @@
 	@author andrey prih <prihmail@gmail.com>
 */
 (function(){
+	var fw = window.fw;
+	
 	if (!fw) {
 		console.error('you must first load jfw.core');
 		return;
@@ -42,4 +44,4 @@
 	route.attr('hash', window.location.hash);
 
 	fw.route = route;
-})(window);
+})();
