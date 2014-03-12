@@ -9,7 +9,7 @@ Install
 <html>
 <head>
 	<title></title>
-	<script type="text/javascript" src="js/jfw.js"></script>
+	<script type="text/javascript" src="js/jfw.core.js"></script>
 </head>
 <body>
 
