@@ -28,6 +28,40 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		return ret;
 	};
 
+	fw.utils.parse_uri = function(href) {
+		var match = href.match(/^(https?\:)?(?:\/\/)?(([^:\/?#]*)(?:\:([0-9]+))?)((?:\/)?[^?#]*)(\?[^#]*|)(#.*|)$/);
+		return match && {
+			protocol: match[1],
+			host: match[2],
+			hostname: match[3],
+			port: match[4],
+			pathname: match[5],
+			search: match[6],
+			hash: match[7]
+		}
+	};
+
+	var fixtures = {};
+	
+	fw.utils.ajax = function(ajax_param) {
+		var uri = fw.utils.parse_uri(ajax_param.url);
+		if (uri.pathname == '' && uri.hostname != '' && uri.protocol == '') {
+			uri.pathname = uri.hostname;
+		}
+
+		if (fixtures[pathname] && fixtures[pathname][ajax_param.type]) {
+			var ret = fixtures[pathname][ajax_param.type].call();
+			if (typeof ajax_param.success == 'function' && ret !== false) {
+				ajax_param.success.call(this, ret);
+			}
+			if (typeof ajax_param.error == 'function' && ret === false) {
+				ajax_param.error.call(this);
+			}
+		} else {
+			jQuery.ajax(ajax_param);
+		}
+	};
+
 	var AjaxRequest = function(type, url, data_cb) {
 		return function(data, suc, err) {
 			data = data  || this.attr();
@@ -51,7 +85,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 				}
 			};
 			if (typeof err == 'function') ajax_param.error = err;
-			jQuery.ajax(ajax_param);
+			fw.utils.ajax(ajax_param);
 		}
 	};
 
@@ -141,6 +175,28 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 				this.__theNew = true;
 			}
 		});
+	};
+
+	fw.Model.fixture = function(req, handler) {
+		var addFixture = function(req, handler) {
+			var p = req.match('^(GET|POST|PUT|DELETE)[\\s]+(.*)$');
+			if (p.length == 3) {
+				fixtures[p[2]] = {};
+				fixtures[p[2]][p[1]] = handler;
+			}
+		};
+
+		if (typeof req == 'string') {
+			addFixture(req, handler);
+		}
+
+		if (typeof req == 'object') {
+			for(var i in req) {
+				if (req.hasOwnProperty(i)) {
+					addFixture(i, req[i]);
+				}
+			}
+		}
 	};
 
 	return fw;
