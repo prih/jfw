@@ -4,18 +4,11 @@
 	@version 0.0.1
 	@author andrey prih <prihmail@gmail.com>
 */
-(function(){
-	var fw = window.fw;
-	
-	if (!fw) {
-		console.error('you must first load jfw.core');
-		return;
-	}
-
+define(['jfw.core', 'jfw.ejs'], function(fw){
 	fw.view = function(template, data) {
 		var ejs = null;
 		if (/\.ejs$/.test(template)) {
-			ejs = new EJS({ url: template });
+			ejs = new fw.EJS({ url: template });
 		} else {
 			var tpl = null;
 			if (tpl = document.getElementById(template)) {
@@ -37,4 +30,6 @@
 			else return render(data);
 		}
 	};
-})();
+
+	return fw;
+});

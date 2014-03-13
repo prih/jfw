@@ -1,14 +1,19 @@
 <html>
 <head>
-	<title></title>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script type="text/javascript" src="js/history.js"></script>
-	<script type="text/javascript" src="js/jfw.core.js"></script>
-	<script type="text/javascript" src="js/jfw.ejs.js"></script>
-	<script type="text/javascript" src="js/jfw.route.js"></script>
-	<script type="text/javascript" src="js/jfw.view.js"></script>
-	<script type="text/javascript" src="js/jfw.control.js"></script>
-	<script type="text/javascript" src="js/jfw.model.js"></script>
+	<title>Example</title>
+	<script type="text/javascript" src="js/require.js"></script>
+	<script type="text/javascript">
+		require.config({
+			baseUrl: 'js',
+			paths: {
+				jquery: 'jquery-1.10.1.min'
+			}
+		});
+
+		require(['jfw.model', 'jfw.control', 'jfw.route'], function(fw){
+			console.log(fw);
+		});
+	</script>
 </head>
 <body>
 	<div id="ttt"></div>
@@ -24,34 +29,34 @@
 </script>
 
 <script type="text/javascript">
-	fw.route.add('test/([0-9]+)', function(param){
-		console.log(param);
-	});
+	// fw.route.add('test/([0-9]+)', function(param){
+	// 	console.log(param);
+	// });
 
-	var Menu = fw.Control({
-		init: function() {
-			this.append(fw.view('list_tmp', { data_list: [
-				{ id: 1, name: '111' },
-				{ id: 2, name: '222' },
-				{ id: 3, name: '333' }
-			] }));
-		},
-		'li a click': function() {
-			console.log('a click');
-		},
-		'li a mousemove': function() {
-			console.log('a move');
-		}
-	});
+	// var Menu = fw.Control({
+	// 	init: function() {
+	// 		this.append(fw.view('list_tmp', { data_list: [
+	// 			{ id: 1, name: '111' },
+	// 			{ id: 2, name: '222' },
+	// 			{ id: 3, name: '333' }
+	// 		] }));
+	// 	},
+	// 	'li a click': function() {
+	// 		console.log('a click');
+	// 	},
+	// 	'li a mousemove': function() {
+	// 		console.log('a move');
+	// 	}
+	// });
 
-	var m = new Menu('#ttt');
+	// var m = new Menu('#ttt');
 
-	var Data = fw.Model({
-		findAll: 'GET ./data/alldata.json',
-		findOne: 'GET ./data/{:id}.json',
-		create: 'POST ./data/new.json',
-		update: 'POST ./data/update_{:id}.json',
-		destroy: 'GET ./data/remove_{:id}.json'
-	});
+	// var Data = fw.Model({
+	// 	findAll: 'GET ./data/alldata.json',
+	// 	findOne: 'GET ./data/{:id}.json',
+	// 	create: 'POST ./data/new.json',
+	// 	update: 'POST ./data/update_{:id}.json',
+	// 	destroy: 'GET ./data/remove_{:id}.json'
+	// });
 
 </script>

@@ -5,8 +5,8 @@
 	@version 0.0.1
 	@author andrey prih <prihmail@gmail.com>
 */
-(function(){
-	var fw = window.fw || {};
+define(function() {
+	var fw = {};
 	var utils = fw.utils || {};
 
 	/**
@@ -492,5 +492,6 @@
 	};
 
 	fw.utils = utils;
-	window.fw = fw;
-})();
+	
+	return fw;
+});

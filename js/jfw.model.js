@@ -4,14 +4,7 @@
 	@version 0.0.1
 	@author andrey prih <prihmail@gmail.com>
 */
-(function(){
-	var fw = window.fw;
-	
-	if (!fw) {
-		console.error('you must first load jfw.core');
-		return;
-	}
-
+define(['jfw.core', 'jquery'], function(fw, jQuery){
 	fw.utils.buildString = function(str, data) {
 		var ret = str;
 		var re = new RegExp('\{\:(.*?)\}', 'g');
@@ -149,4 +142,6 @@
 			}
 		});
 	};
-})();
+
+	return fw;
+});

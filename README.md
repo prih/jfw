@@ -8,11 +8,23 @@ Install
 ``` html
 <html>
 <head>
-	<title></title>
-	<script type="text/javascript" src="js/jfw.core.js"></script>
+  <title>Example</title>
+  <script type="text/javascript" src="js/require.js"></script>
+  <script type="text/javascript">
+    require.config({
+      baseUrl: 'js',
+      paths: {
+        jquery: 'jquery-1.10.1.min'
+      }
+    });
+
+    require(['jfw.core', 'jfw.route', 'jfw.view', 'jfw.control', 'jfw.model'],
+    function(fw){
+      console.log(fw);
+    });
+  </script>
 </head>
 <body>
-
 </body>
 </html>
 ```

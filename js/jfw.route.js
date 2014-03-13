@@ -4,14 +4,7 @@
 	@version 0.0.1
 	@author andrey prih <prihmail@gmail.com>
 */
-(function(){
-	var fw = window.fw;
-	
-	if (!fw) {
-		console.error('you must first load jfw.core');
-		return;
-	}
-
+define(['jfw.core', 'history'], function(fw){
 	var route_rules = {};
 
 	var route = new fw.Map({
@@ -44,4 +37,6 @@
 	route.attr('hash', window.location.hash);
 
 	fw.route = route;
-})();
+
+	return fw;
+});
