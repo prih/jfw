@@ -48,18 +48,39 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		if (uri.pathname == '' && uri.hostname != '' && uri.protocol == '') {
 			uri.pathname = uri.hostname;
 		}
+		uri.pathname += uri.search;
 
-		if (fixtures[pathname] && fixtures[pathname][ajax_param.type]) {
-			var ret = fixtures[pathname][ajax_param.type].call();
-			if (typeof ajax_param.success == 'function' && ret !== false) {
-				ajax_param.success.call(this, ret);
-			}
-			if (typeof ajax_param.error == 'function' && ret === false) {
-				ajax_param.error.call(this);
+		if (fixtures[uri.pathname]) {
+			if (typeof fixtures[uri.pathname][ajax_param.type] == 'function') {
+				var ret = fixtures[uri.pathname][ajax_param.type].call(this, ajax_param);
+				if (typeof ajax_param.success == 'function' && ret !== false)
+					ajax_param.success.call(this, ret);
+				if (typeof ajax_param.error == 'function' && ret === false)
+					ajax_param.error.call(this);
+			} else {
+				jQuery.ajax(ajax_param);
 			}
 		} else {
-			jQuery.ajax(ajax_param);
+			for (var i in fixtures) {
+				var parse_str = null;
+				if ( (parse_str = fixtures[i].reg.exec(ajax_param.url)) != null ) {
+					fixtures[i].reg.lastIndex = 0;
+					var data = {};
+					for (var j = 1; j < parse_str.length; j++) {
+						data[fixtures[i].fields[j-1]] = parse_str[j];
+					}
+					var ret = fixtures[i][ajax_param.type].call(this, ajax_param, data);
+					if (typeof ajax_param.success == 'function' && ret !== false)
+						ajax_param.success.call(this, ret);
+					if (typeof ajax_param.error == 'function' && ret === false)
+						ajax_param.error.call(this);
+
+					return;
+				}
+			}
 		}
+
+		jQuery.ajax(ajax_param);
 	};
 
 	var AjaxRequest = function(type, url, data_cb) {
@@ -119,10 +140,11 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			buildStatFind(model_stat, param.findAll, 'findAll', function(res_json){
 				var ret = [];
 				if (typeof res_json.data != 'undefined') {
-					for (var i in res_json.data) {
-						var obj = new RowsMap(res_json.data[i]);
-						ret[i] = obj;
-					}
+					// for (var i in res_json.data) {
+					// 	var obj = new RowsMap(res_json.data[i]);
+					// 	ret[i] = obj;
+					// }
+					return res_json.data;
 				}
 				return ret;
 			});
@@ -132,7 +154,8 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			buildStatFind(model_stat, param.findOne, 'findOne', function(res_json){
 				var ret = null;
 				if (res_json) {
-					ret = new RowsMap(res_json);
+					// ret = new RowsMap(res_json);
+					return res_json;
 				}
 				return ret;
 			});
@@ -178,11 +201,22 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 	};
 
 	fw.Model.fixture = function(req, handler) {
+		var re = new RegExp('\{\:(.*?)\}', 'g');
 		var addFixture = function(req, handler) {
 			var p = req.match('^(GET|POST|PUT|DELETE)[\\s]+(.*)$');
 			if (p.length == 3) {
 				fixtures[p[2]] = {};
 				fixtures[p[2]][p[1]] = handler;
+				if (p[2].match(re)) {
+					var data = [];
+					var res = null;
+					while ((res = re.exec(p[2])) != null) {
+						data.push(res[1]);
+					}
+					fixtures[p[2]].fields = data;
+					var reg_str = p[2].replace(/\{\:.*?\}/g, '(.+?)');
+					fixtures[p[2]].reg = new RegExp(reg_str, 'g');
+				}
 			}
 		};
 

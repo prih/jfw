@@ -254,6 +254,10 @@ define(function() {
 						if (eventObj.stopPropagation) return;
 					}
 				}
+			},
+
+			destroy: function() {
+				// map_events[this.__id]
 			}
 		};
 
