@@ -56,8 +56,14 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 	};
 
 	var fixtures = {};
+	var fixtures_enable = false;
 	
 	fw.utils.ajax = function(ajax_param) {
+		if (!fixtures_enable) {
+			jQuery.ajax(ajax_param);
+			return;
+		}
+
 		var uri = fw.utils.parse_uri(ajax_param.url);
 		if (uri.pathname == '' && uri.hostname != '' && uri.protocol == '') {
 			uri.pathname = uri.hostname;
@@ -77,7 +83,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		} else {
 			for (var i in fixtures) {
 				var parse_str = null;
-				if ( (parse_str = fixtures[i].reg.exec(ajax_param.url)) != null ) {
+				if (fixtures[i].reg && (parse_str = fixtures[i].reg.exec(ajax_param.url)) != null ) {
 					fixtures[i].reg.lastIndex = 0;
 					var data = {};
 					for (var j = 1; j < parse_str.length; j++) {
@@ -213,6 +219,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		var addFixture = function(req, handler) {
 			var p = req.match('^(GET|POST|PUT|DELETE)[\\s]+(.*)$');
 			if (p.length == 3) {
+				fixtures_enable = true;
 				fixtures[p[2]] = {};
 				fixtures[p[2]][p[1]] = handler;
 				if (p[2].match(re)) {
