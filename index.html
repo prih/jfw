@@ -12,6 +12,15 @@
 
 		require(['jfw.model', 'jfw.control', 'jfw.route'], function(fw){
 			window.fw = fw;
+			var mod = fw.Model({ findOne: 'GET /auth/login/{:id}/{:login}' });
+			fw.Model.fixture('GET /auth/login/{:id}/{:login}', function(){ return { success: true } } );
+			var test = function() {
+				var t1 = new Date();
+				for (var i = 0; i < 1000000; i++) mod.findOne({ id: 1, login: 'test' }, function() { } );
+				var t2 = new Date();
+				document.write(+t2 - +t1);
+			}
+			test();
 		});
 	</script>
 </head>

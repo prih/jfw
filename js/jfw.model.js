@@ -5,6 +5,20 @@
 	@author andrey prih <prihmail@gmail.com>
 */
 define(['jfw.core', 'jquery'], function(fw, jQuery){
+	fw.utils.createModelUrlTemplate = function(str) {
+		var re = new RegExp('\{\:(.*?)\}', 'g');
+		var res = null;
+		var tpl = '\''+str+'\'';
+		while ((res = re.exec(str)) != null) {
+			tpl = tpl.replace(res[0], '\'+tpl_data[\''+res[1]+'\']+\'');
+		}
+		return tpl;
+	};
+
+	fw.utils.makeModelUrlTemplate = function(tpl_str, tpl_data) {
+		return eval(tpl_str);
+	};
+
 	fw.utils.buildString = function(str, data) {
 		var ret = str;
 		var re = new RegExp('\{\:(.*?)\}', 'g');
@@ -84,18 +98,17 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 	};
 
 	var AjaxRequest = function(type, url, data_cb) {
+		var url_tpl = fw.utils.createModelUrlTemplate(url);
+
 		return function(data, suc, err) {
 			data = data  || this.attr();
-			var str_data = {};
-			for (var i in data) {
-				str_data[i] = data[i];
-			}
+			
 			var ajax_param = {
 				type: type.toUpperCase(),
-				url: fw.utils.buildString(url, str_data),
+				url: fw.utils.makeModelUrlTemplate(url_tpl, data),
 				dataType: 'json',
 				cache: false,
-				data: str_data
+				data: data
 			};
 			if (typeof suc == 'function') ajax_param.success = function(res_data){
 				if (typeof data_cb == 'function') {
@@ -140,10 +153,6 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			buildStatFind(model_stat, param.findAll, 'findAll', function(res_json){
 				var ret = [];
 				if (typeof res_json.data != 'undefined') {
-					// for (var i in res_json.data) {
-					// 	var obj = new RowsMap(res_json.data[i]);
-					// 	ret[i] = obj;
-					// }
 					return res_json.data;
 				}
 				return ret;
