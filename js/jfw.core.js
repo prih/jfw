@@ -20,6 +20,19 @@ define(function() {
 		}
 	};
 
+	fw.extend = function(ns, ns_string) {
+		var parts = ns_string.split('.'), parent = ns, pl, i;
+		if (parts[0] == "fw") parts = parts.slice(1);
+		pl = parts.length;
+		for (i = 0; i < pl; i++) {
+			if (typeof parent[parts[i]] == 'undefined') {
+				parent[parts[i]] = {};
+			}
+			parent = parent[parts[i]];
+		}
+		return parent;
+	};
+
 	/**
 		Создание нового класса
 		@param {Object} stat Статические свойства класса
