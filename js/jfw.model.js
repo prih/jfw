@@ -77,8 +77,10 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 					ajax_param.success.call(this, ret);
 				if (typeof ajax_param.error == 'function' && ret === false)
 					ajax_param.error.call(this);
+				return;
 			} else {
 				jQuery.ajax(ajax_param);
+				return;
 			}
 		} else {
 			for (var i in fixtures) {
