@@ -154,8 +154,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			buildStatFind(model_stat, param.findOne, 'findOne', function(res_json){
 				var ret = null;
 				if (res_json) {
-					// ret = new RowsMap(res_json);
-					return res_json;
+					ret = new RowsMap(res_json);
 				}
 				return ret;
 			});

@@ -75,9 +75,9 @@ define(function() {
 		@private
 		@see fw.Map.extend
 	*/
-	var map_events = {
-		length: 0
-	};
+	// var map_events = {
+	// 	length: 0
+	// };
 
 	var MapEvent = function(how, key, old_val, new_val) {
 		this['how'] = how;
@@ -194,15 +194,15 @@ define(function() {
 				@param {Function} cb Функция обработчик события
 			*/
 			bind: function(type, cb) {
-				if ( !(map_events[this.__id][type] instanceof Array) ) {
-					map_events[this.__id][type] = [];
+				if ( !(this.map_events[this.__id][type] instanceof Array) ) {
+					this.map_events[this.__id][type] = [];
 				}
-				for (var i in map_events[this.__id][type]) {
-					if (map_events[this.__id][type][i] == cb) {
+				for (var i in this.map_events[this.__id][type]) {
+					if (this.map_events[this.__id][type][i] == cb) {
 						return;
 					}
 				}
-				map_events[this.__id][type].push(cb);
+				this.map_events[this.__id][type].push(cb);
 			},
 			/**
 				Удаляет все обработчики указанного события у объекта Map
@@ -210,14 +210,14 @@ define(function() {
 				@param {Function} cb Функция обработчик события
 			*/
 			unbind: function(type, cb) {
-				if (map_events[this.__id][type] instanceof Array) {
+				if (this.map_events[this.__id][type] instanceof Array) {
 					if (typeof cb == 'undefined') {
-						delete map_events[this.__id][type];
+						delete this.map_events[this.__id][type];
 						return;
 					} else {
-						for (var i in map_events[this.__id][type]) {
-							if (map_events[this.__id][type][i] == cb) {
-								map_events[this.__id][type].splice(i, 1);
+						for (var i in this.map_events[this.__id][type]) {
+							if (this.map_events[this.__id][type][i] == cb) {
+								this.map_events[this.__id][type].splice(i, 1);
 								return;
 							}
 						}
@@ -233,31 +233,27 @@ define(function() {
 			*/
 			trigger: function(how, key, old_val, new_val) {
 				var eventObj = null;
-				if (typeof map_events[this.__id][key] != 'undefined') {
+				if (typeof this.map_events[this.__id][key] != 'undefined') {
 					eventObj = new MapEvent(how, key, old_val, new_val);
-					for (var i = 0; i < map_events[this.__id][key].length; i++) {
-						map_events[this.__id][key][i].call(this, eventObj);
+					for (var i = 0; i < this.map_events[this.__id][key].length; i++) {
+						this.map_events[this.__id][key][i].call(this, eventObj);
 						if (eventObj.stopPropagation) return;
 					}
 				}
-				if (typeof map_events[this.__id][how] != 'undefined') {
+				if (typeof this.map_events[this.__id][how] != 'undefined') {
 					eventObj = eventObj || new MapEvent(how, key, old_val, new_val);
-					for (var i = 0; i < map_events[this.__id][how].length; i++) {
-						map_events[this.__id][how][i].call(this, eventObj);
+					for (var i = 0; i < this.map_events[this.__id][how].length; i++) {
+						this.map_events[this.__id][how][i].call(this, eventObj);
 						if (eventObj.stopPropagation) return;
 					}
 				}
-				if (typeof map_events[this.__id]['change'] != 'undefined') {
+				if (typeof this.map_events[this.__id]['change'] != 'undefined') {
 					eventObj = eventObj || new MapEvent('change', key, old_val, new_val);
-					for (var i = 0; i < map_events[this.__id]['change'].length; i++) {
-						map_events[this.__id]['change'][i].call(this, eventObj);
+					for (var i = 0; i < this.map_events[this.__id]['change'].length; i++) {
+						this.map_events[this.__id]['change'][i].call(this, eventObj);
 						if (eventObj.stopPropagation) return;
 					}
 				}
-			},
-
-			destroy: function() {
-				// map_events[this.__id]
 			}
 		};
 
@@ -265,6 +261,10 @@ define(function() {
 
 		return fw.Construct.extend(ext, stat, {
 			'init': function(param){
+				this.map_events = {
+					length: 0
+				};
+
 				param = param || {};
 				this.keys = [];
 
@@ -284,10 +284,10 @@ define(function() {
 				/*
 				*	Уникальный идентификатор объекта Map
 				*/
-				map_events.length++;
-				var __id = 'map'+map_events.length;
+				this.map_events.length++;
+				var __id = 'map'+this.map_events.length;
 				this.__id = __id;
-				map_events[__id] = {};
+				this.map_events[__id] = {};
 			}
 		});
 	};
