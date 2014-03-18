@@ -10,7 +10,7 @@ define(['jfw.core', 'history'], function(fw){
 	var route = new fw.Map({
 		'add': function(rule, handler) {
 			route_rules[rule] = {
-				reg: new RegExp(rule),
+				reg: new RegExp('^'+rule+'$'),
 				handler: handler
 			};
 		},
