@@ -246,26 +246,48 @@ define(function() {
 			*/
 			trigger: function(how, key, old_val, new_val) {
 				var eventObj = null;
+				var self = this;
 				if (typeof this.map_events[this.__id][key] != 'undefined') {
 					eventObj = new MapEvent(how, key, old_val, new_val);
 					for (var i = 0; i < this.map_events[this.__id][key].length; i++) {
-						this.map_events[this.__id][key][i].call(this, eventObj);
-						if (eventObj.stopPropagation) return;
+						this.events_fifo.push({
+							fun: self.map_events[this.__id][key][i],
+							cont: this,
+							obj: eventObj
+						});
+						if (eventObj.stopPropagation) break;
 					}
 				}
 				if (typeof this.map_events[this.__id][how] != 'undefined') {
 					eventObj = eventObj || new MapEvent(how, key, old_val, new_val);
 					for (var i = 0; i < this.map_events[this.__id][how].length; i++) {
-						this.map_events[this.__id][how][i].call(this, eventObj);
-						if (eventObj.stopPropagation) return;
+						this.events_fifo.push({
+							fun: self.map_events[this.__id][how][i],
+							cont: this,
+							obj: eventObj
+						});
+						if (eventObj.stopPropagation) break;
 					}
 				}
 				if (typeof this.map_events[this.__id]['change'] != 'undefined') {
 					eventObj = eventObj || new MapEvent('change', key, old_val, new_val);
 					for (var i = 0; i < this.map_events[this.__id]['change'].length; i++) {
-						this.map_events[this.__id]['change'][i].call(this, eventObj);
-						if (eventObj.stopPropagation) return;
+						this.events_fifo.push({
+							fun: self.map_events[this.__id]['change'][i],
+							cont: this,
+							obj: eventObj
+						});
+						if (eventObj.stopPropagation) break;
 					}
+				}
+
+				if (!this.events_work && this.events_fifo.length) {
+					this.events_work = true;
+					var e = null;
+					while (e = this.events_fifo.shift()) {
+						e.fun.call(e.cont, e.obj);
+					}
+					this.events_work = false;
 				}
 			}
 		};
@@ -274,6 +296,9 @@ define(function() {
 
 		return fw.Construct.extend(ext, stat, {
 			'init': function(param){
+				this.events_fifo = [];
+				this.events_work = false;
+
 				this.map_events = {
 					length: 0
 				};
