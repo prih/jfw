@@ -147,6 +147,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			save: function(cb) {
 				if (typeof this.__theNew != 'undefined') {
 					this.create(this.attr(), cb);
+					delete this.__theNew;
 				} else {
 					this.update(this.attr(), cb);
 				}
