@@ -3,8 +3,7 @@ JFW - Model
 
 Конструктор объектов типа Map для орзанизации удобной работы с REST API.
 
-Example
-
+Example:
 ``` js
 require(['jfw.model'], function(fw){
   var model = fw.Model({
