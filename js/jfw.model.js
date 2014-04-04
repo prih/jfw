@@ -144,12 +144,12 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		param = param || {};
 
 		var model_proto = {
-			save: function(cb) {
+			save: function(cb, err) {
 				if (typeof this.__theNew != 'undefined') {
-					this.create(this.attr(), cb);
+					this.create(cb, err);
 					delete this.__theNew;
 				} else {
-					this.update(this.attr(), cb);
+					this.update(cb, err);
 				}
 			}
 		}

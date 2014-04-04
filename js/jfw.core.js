@@ -14,9 +14,17 @@ define(function() {
 		@param {Object} child Объект наследник
 		@param {Object} parent Расширяемый объект
 	*/
-	utils.simpleExtend = function(child, parent){
+	utils.simpleExtend = function(child, parent, own){
+		own = own || false;
 		for (var i in parent) {
-			if (typeof child[i] == 'undefined' && i != 'init') child[i] = parent[i];
+			if (
+				typeof child[i] == 'undefined'
+				&& i != 'init'
+			) {
+				if (own && parent.hasOwnProperty(parent[i]))
+					child[i] = parent[i];
+				if (!own) child[i] = parent[i];
+			}
 		}
 	};
 
@@ -306,7 +314,7 @@ define(function() {
 				param = param || {};
 				this.keys = [];
 
-				utils.simpleExtend(param, default_param);
+				utils.simpleExtend(param, default_param, true);
 
 				if (typeof default_param.init == 'function') {
 					default_param.init.apply(this, arguments);
