@@ -96,9 +96,6 @@ define(function() {
 		@private
 		@see fw.Map.extend
 	*/
-	// var map_events = {
-	// 	length: 0
-	// };
 
 	var MapEvent = function(how, key, old_val, new_val) {
 		this['how'] = how;
@@ -314,7 +311,7 @@ define(function() {
 				param = param || {};
 				this.keys = [];
 
-				utils.simpleExtend(param, default_param, true);
+				utils.simpleExtend(param, default_param);
 
 				if (typeof default_param.init == 'function') {
 					default_param.init.apply(this, arguments);

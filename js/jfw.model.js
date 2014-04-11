@@ -156,14 +156,11 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 
 		var model_stat = {};
 
-		var RowMap = fw.Map.extend(model_proto, {});
-		var RowsList = fw.List.extend(model_proto, {});
-
 		if (typeof param.findAll != 'undefined') {
 			buildStatFind(model_stat, param.findAll, 'findAll', function(res_json){
 				var ret = null;
 				if (typeof res_json.data != 'undefined') {
-					ret = new RowsList(res_json.data);
+					ret = res_json.data;
 				}
 				return ret;
 			});
@@ -173,7 +170,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			buildStatFind(model_stat, param.findOne, 'findOne', function(res_json){
 				var ret = null;
 				if (res_json) {
-					ret = new RowMap(res_json);
+					ret = res_json;
 				}
 				return ret;
 			});

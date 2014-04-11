@@ -108,7 +108,7 @@ destory отличается от всех, тем что передает то�
 Пример:
 ``` js
 require(['jfw.model'], function(fw){
-  var model = fw.Model({
+  var Model = fw.Model({
     findOne: 'GET /path/{:id}',
     findAll: 'GET /path_all',
     create: 'POST /path_create',
@@ -121,7 +121,7 @@ require(['jfw.model'], function(fw){
   mod.name = 'Some other name';
   mod.save(); // выполнится update
   
-  model.findOne({ id: 123 }, function(item){
+  Model.findOne({ id: 123 }, function(item){
     
   });
 });
