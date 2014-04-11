@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<!-- saved from url=(0019)file:///tmp/27.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8"><style>body
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body
 {
   font-size:15px;
   line-height:1.7;
@@ -750,7 +748,7 @@ body .task-list{
 .type-csharp .highlight .sc{
   color:#A31515
 }</style><title>jfw.model</title></head><body><h1>
-<a name="user-content-jfw---model" class="anchor" href="file:///tmp/27.html#jfw---model"><span class="octicon octicon-link"></span></a>JFW - Model</h1>
+<a name="user-content-jfw---model" class="anchor" href="#jfw---model"><span class="octicon octicon-link"></span></a>JFW - Model</h1>
 
 <p>Конструктор объектов типа Map для орзанизации удобной работы с REST API.</p>
 
@@ -778,7 +776,7 @@ param_object - объект содержащий настройки CRUD опе�
 <p>Все методы модели инкапсулируют jQuery ajax метод, взаимодействие проходит в асинхронном режиме.</p>
 
 <h3>
-<a name="user-content-findone-findall" class="anchor" href="file:///tmp/27.html#findone-findall"><span class="octicon octicon-link"></span></a>findOne, findAll</h3>
+<a name="user-content-findone-findall" class="anchor" href="#findone-findall"><span class="octicon octicon-link"></span></a>findOne, findAll</h3>
 
 <pre><code>findOne|findAll (request_data, success_function, error_function);
 </code></pre>
@@ -840,7 +838,7 @@ param_object - объект содержащий настройки CRUD опе�
 </pre></div>
 
 <h3>
-<a name="user-content-create-update-destroy-save" class="anchor" href="file:///tmp/27.html#create-update-destroy-save"><span class="octicon octicon-link"></span></a>create, update, destroy, save</h3>
+<a name="user-content-create-update-destroy-save" class="anchor" href="#create-update-destroy-save"><span class="octicon octicon-link"></span></a>create, update, destroy, save</h3>
 
 <pre><code>create|update|destroy|save (success_function, error_function);
 </code></pre>
@@ -866,7 +864,13 @@ param_object - объект содержащий настройки CRUD опе�
   <span class="nx">mod</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span> <span class="c1">// выполнится update</span>
 
   <span class="nx">Model</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">123</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">){</span>
-
+    <span class="kd">var</span> <span class="nx">some_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Model</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+    <span class="nx">some_obj</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">'new name'</span><span class="p">;</span>
+    <span class="nx">some_obj</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'update done!'</span><span class="p">);</span>
+    <span class="p">},</span> <span class="kd">function</span><span class="p">(){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'update error!'</span><span class="p">);</span>
+    <span class="p">});</span>
   <span class="p">});</span>
 <span class="p">});</span>
 </pre></div></body></html>

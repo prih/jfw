@@ -122,7 +122,13 @@ require(['jfw.model'], function(fw){
   mod.save(); // выполнится update
   
   Model.findOne({ id: 123 }, function(item){
-    
+    var some_obj = new Model(item);
+    some_obj.name = 'new name';
+    some_obj.update(function(){
+      console.log('update done!');
+    }, function(){
+      console.log('update error!');
+    });
   });
 });
 ```
