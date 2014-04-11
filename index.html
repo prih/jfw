@@ -23,7 +23,7 @@
 				{ id: 3 }
 			] } } );
 			mod.findOne({ id: 1 }, function(data){
-				var user = new mod(data);
+				var user = new mod(data, false);
 				console.log(user);
 			});
 			mod.findAll({ name: 'test' }, function(data){

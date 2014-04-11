@@ -837,6 +837,33 @@ param_object - объект содержащий настройки CRUD опе�
 <span class="p">}</span>
 </pre></div>
 
+<h2>
+<a name="user-content-%D0%9E%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D0%B8" class="anchor" href="#%D0%9E%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D0%B8"><span class="octicon octicon-link"></span></a>Объект модели</h2>
+
+<p>Для создания экземпляра сущности, достаточно создать объект вызвав функцию-конструктор нашей модели:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">newObject</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Model</span><span class="p">(</span><span class="nx">object</span> <span class="p">[,</span> <span class="nx">the_new</span> <span class="o">=</span> <span class="kc">true</span><span class="p">]);</span>
+</pre></div>
+
+<p>где:
+  object - объект с данными;
+  the_new - состояние флага "__theNew" (используется для выбора create или update).</p>
+
+<p>Пример:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'jfw.model'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fw</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">Model</span> <span class="o">=</span> <span class="nx">fw</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span>
+    <span class="nx">findOne</span><span class="o">:</span> <span class="s1">'GET /path/{:id}'</span><span class="p">,</span>
+    <span class="nx">findAll</span><span class="o">:</span> <span class="s1">'GET /path_all'</span><span class="p">,</span>
+    <span class="nx">create</span><span class="o">:</span> <span class="s1">'POST /path_create'</span><span class="p">,</span>
+    <span class="nx">update</span><span class="o">:</span> <span class="s1">'POST /path_update'</span><span class="p">,</span>
+    <span class="k">delete</span><span class="o">:</span> <span class="s1">'GET /path_delete/{:id}'</span>
+  <span class="p">});</span>
+
+  <span class="kd">var</span> <span class="nx">theNewModelObject</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Model</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
 <h3>
 <a name="user-content-create-update-destroy-save" class="anchor" href="#create-update-destroy-save"><span class="octicon octicon-link"></span></a>create, update, destroy, save</h3>
 
@@ -864,9 +891,9 @@ param_object - объект содержащий настройки CRUD опе�
   <span class="nx">mod</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span> <span class="c1">// выполнится update</span>
 
   <span class="nx">Model</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">123</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">){</span>
-    <span class="kd">var</span> <span class="nx">some_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Model</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">some_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Model</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
     <span class="nx">some_obj</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">'new name'</span><span class="p">;</span>
-    <span class="nx">some_obj</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="nx">some_obj</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'update done!'</span><span class="p">);</span>
     <span class="p">},</span> <span class="kd">function</span><span class="p">(){</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'update error!'</span><span class="p">);</span>

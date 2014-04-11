@@ -95,6 +95,32 @@ JSON ответ сервера должен быть такого вида:
 }
 ```
 
+##Объект модели
+
+Для создания экземпляра сущности, достаточно создать объект вызвав функцию-конструктор нашей модели:
+
+``` js
+var newObject = new Model(object [, the_new = true]);
+```
+где:
+  object - объект с данными;
+  the_new - состояние флага "__theNew" (используется для выбора create или update).
+
+Пример:
+``` js
+require(['jfw.model'], function(fw){
+  var Model = fw.Model({
+    findOne: 'GET /path/{:id}',
+    findAll: 'GET /path_all',
+    create: 'POST /path_create',
+    update: 'POST /path_update',
+    delete: 'GET /path_delete/{:id}'
+  });
+
+  var theNewModelObject = new Model();
+});
+```
+
 ###create, update, destroy, save
 
 ```
@@ -122,9 +148,9 @@ require(['jfw.model'], function(fw){
   mod.save(); // выполнится update
   
   Model.findOne({ id: 123 }, function(item){
-    var some_obj = new Model(item);
+    var some_obj = new Model(item, false);
     some_obj.name = 'new name';
-    some_obj.update(function(){
+    some_obj.save(function(){
       console.log('update done!');
     }, function(){
       console.log('update error!');

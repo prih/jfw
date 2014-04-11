@@ -204,13 +204,15 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		}
 
 		return fw.Map.extend(model_proto, model_stat, {
-			'init': function() {
+			'init': function(data_object, the_new) {
+				if (typeof the_new == 'undefined') the_new = true;
+				else the_new = Boolean(the_new);
 				if (typeof param.init == 'function') {
 					param.init.call(this);
 					delete param.init;
 				}
 
-				this.__theNew = true;
+				this.__theNew = the_new;
 			}
 		});
 	};
