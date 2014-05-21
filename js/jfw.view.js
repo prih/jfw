@@ -18,13 +18,7 @@ define(['jfw.core', 'jfw.ejs'], function(fw){
 		if (ejs) {
 			var render = function(data) {
 				var str = ejs.render(data);
-				var dom = document.createElement('div');
-				dom.innerHTML = str;
-				var ret = document.createDocumentFragment();
-				for (var i = 0; i < dom.children.length; i++) {
-					ret.appendChild(dom.children[i]);
-				}
-				return ret;
+				return str;
 			};
 			if (typeof data == 'undefined') return render;
 			else return render(data);
