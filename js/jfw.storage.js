@@ -8,13 +8,17 @@ define(['jfw.core'], function(fw){
 	var storage = new fw.Map();
 
 	storage.bind('change', function(e){
+		if (e.new_val) {
+			e.new_val = JSON.stringify(e.new_val);
+		}
 		localStorage.setItem(e.key, e.new_val);
 	});
 
 	if (typeof Storage != 'undefined') {
 		storage.attr = function(key, val) {
 			if (typeof this[key] == 'undefined') {
-				this[key] = localStorage.getItem(key);
+				var data = localStorage.getItem(key);
+				if (data) this[key] = JSON.parse(data);
 			}
 			return this.superclass.attr.call(this, key, val);
 		};
