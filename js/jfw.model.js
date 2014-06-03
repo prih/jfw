@@ -72,11 +72,12 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 
 		if (fixtures[uri.pathname]) {
 			if (typeof fixtures[uri.pathname][ajax_param.type] == 'function') {
-				var ret = fixtures[uri.pathname][ajax_param.type].call(this, ajax_param);
-				if (typeof ajax_param.success == 'function' && ret !== false)
-					ajax_param.success.call(this, ret);
-				if (typeof ajax_param.error == 'function' && ret === false)
-					ajax_param.error.call(this);
+				fixtures[uri.pathname][ajax_param.type].call(this, ajax_param, function(ret){
+					if (typeof ajax_param.success == 'function' && ret !== false)
+						ajax_param.success.call(this, ret);
+					if (typeof ajax_param.error == 'function' && ret === false)
+						ajax_param.error.call(this);
+				});
 				return;
 			} else {
 				jQuery.ajax(ajax_param);
@@ -92,11 +93,12 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 						data[fixtures[i].fields[j-1]] = parse_str[j];
 					}
 					var ret = fixtures[i][ajax_param.type].call(this, ajax_param, data);
-					if (typeof ajax_param.success == 'function' && ret !== false)
-						ajax_param.success.call(this, ret);
-					if (typeof ajax_param.error == 'function' && ret === false)
-						ajax_param.error.call(this);
-
+					fixtures[i][ajax_param.type].call(this, ajax_param, function(ret){
+						if (typeof ajax_param.success == 'function' && ret !== false)
+							ajax_param.success.call(this, ret);
+						if (typeof ajax_param.error == 'function' && ret === false)
+							ajax_param.error.call(this);
+					}, data);
 					return;
 				}
 			}

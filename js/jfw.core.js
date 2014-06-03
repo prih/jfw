@@ -17,10 +17,7 @@ define(function() {
 	utils.simpleExtend = function(child, parent, own){
 		own = own || false;
 		for (var i in parent) {
-			if (
-				typeof child[i] == 'undefined'
-				&& i != 'init'
-			) {
+			if (typeof child[i] == 'undefined') {
 				if (own && parent.hasOwnProperty(parent[i]))
 					child[i] = parent[i];
 				if (!own) child[i] = parent[i];
@@ -313,8 +310,8 @@ define(function() {
 
 				utils.simpleExtend(param, default_param);
 
-				if (typeof default_param.init == 'function') {
-					default_param.init.apply(this, arguments);
+				if (typeof param.init == 'function') {
+					param.init.apply(this, arguments);
 				}
 
 				if (typeof param == 'object') {

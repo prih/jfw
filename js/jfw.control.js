@@ -14,7 +14,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			'init': function(selector) {
 				if (selector) this['element'] = jQuery(selector);
 				else this['element'] = jQuery(document.createElement('div'));
-				
+
 				if (typeof param.init == 'function') param.init.apply(this, arguments);
 				for (var i in param) {
 					if (i != 'init') {
