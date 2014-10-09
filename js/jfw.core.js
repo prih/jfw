@@ -312,13 +312,14 @@ define(function() {
 
 				if (typeof param.init == 'function') {
 					param.init.apply(this, arguments);
-					delete param.init;
 				}
 
 				if (typeof param == 'object') {
 					for (var i in param) {
-						this[i] = param[i];
-						this.keys.push(i);
+						if (i != 'init') {
+							this[i] = param[i];
+							this.keys.push(i);
+						}
 					}
 				}
 
