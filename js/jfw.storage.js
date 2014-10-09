@@ -12,7 +12,7 @@ define(['jfw.core'], function(fw){
 			e.new_val = JSON.stringify(e.new_val);
 			localStorage.setItem(e.key, e.new_val);
 		} else {
-			localStorage.removeItem(key);
+			localStorage.removeItem(e.key);
 		}
 	});
 
@@ -23,6 +23,10 @@ define(['jfw.core'], function(fw){
 				if (data) this[key] = JSON.parse(data);
 			}
 			return this.superclass.attr.call(this, key, val);
+		};
+		storage.removeAttr = function(key) {
+			localStorage.removeItem(key);
+			return this.superclass.removeAttr.call(this, key);
 		};
 	}
 
