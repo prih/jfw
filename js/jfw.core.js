@@ -69,11 +69,11 @@ define(function() {
 		param = param || {};
 
 		var Construct = function(){
-			if (typeof param.init == 'function') {
-				param.init.apply(this, arguments);
-			}
 			for (var i in param) {
 				if (i != 'init') this[i] = param[i];
+			}
+			if (typeof param.init == 'function') {
+				param.init.apply(this, arguments);
 			}
 		};
 
@@ -312,6 +312,7 @@ define(function() {
 
 				if (typeof param.init == 'function') {
 					param.init.apply(this, arguments);
+					delete param.init;
 				}
 
 				if (typeof param == 'object') {

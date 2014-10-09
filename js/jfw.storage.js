@@ -8,10 +8,12 @@ define(['jfw.core'], function(fw){
 	var storage = new fw.Map();
 
 	storage.bind('change', function(e){
-		if (e.new_val) {
+		if (typeof e.new_val != 'undefined') {
 			e.new_val = JSON.stringify(e.new_val);
+			localStorage.setItem(e.key, e.new_val);
+		} else {
+			localStorage.removeItem(key);
 		}
-		localStorage.setItem(e.key, e.new_val);
 	});
 
 	if (typeof Storage != 'undefined') {
@@ -21,11 +23,6 @@ define(['jfw.core'], function(fw){
 				if (data) this[key] = JSON.parse(data);
 			}
 			return this.superclass.attr.call(this, key, val);
-		};
-
-		storage.removeAttr = function(key) {
-			localStorage.removeItem(key);
-			return this.superclass.removeAttr.call(this, key);
 		};
 	}
 
