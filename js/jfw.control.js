@@ -23,7 +23,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 							param[i].control = this;
 							var cb = param[i];
 							
-							jQuery(this.element).on(p[2], p[1], { obj: this }, cb);
+							jQuery(this.element).on(p[2], p[1], { self: this }, cb);
 						} else {
 							this[i] = param[i];
 						}

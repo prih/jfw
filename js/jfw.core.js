@@ -249,6 +249,8 @@ define(function() {
 			trigger: function(how, key, old_val, new_val) {
 				var eventObj = null;
 				var self = this;
+				var allStop = false;
+
 				if (typeof this.map_events[this.__id][key] != 'undefined') {
 					eventObj = new MapEvent(how, key, old_val, new_val);
 					for (var i = 0; i < this.map_events[this.__id][key].length; i++) {
@@ -257,10 +259,14 @@ define(function() {
 							cont: this,
 							obj: eventObj
 						});
-						if (eventObj.stopPropagation) break;
+						if (eventObj.stopPropagation) {
+							allStop = true;
+							break;
+						}
 					}
 				}
-				if (typeof this.map_events[this.__id][how] != 'undefined') {
+
+				if (!allStop && typeof this.map_events[this.__id][how] != 'undefined') {
 					eventObj = eventObj || new MapEvent(how, key, old_val, new_val);
 					for (var i = 0; i < this.map_events[this.__id][how].length; i++) {
 						this.events_fifo.push({
@@ -268,10 +274,14 @@ define(function() {
 							cont: this,
 							obj: eventObj
 						});
-						if (eventObj.stopPropagation) break;
+						if (eventObj.stopPropagation) {
+							allStop = true;
+							break;
+						}
 					}
 				}
-				if (typeof this.map_events[this.__id]['change'] != 'undefined') {
+
+				if (!allStop && typeof this.map_events[this.__id]['change'] != 'undefined') {
 					eventObj = eventObj || new MapEvent('change', key, old_val, new_val);
 					for (var i = 0; i < this.map_events[this.__id]['change'].length; i++) {
 						this.events_fifo.push({
@@ -279,7 +289,10 @@ define(function() {
 							cont: this,
 							obj: eventObj
 						});
-						if (eventObj.stopPropagation) break;
+						if (eventObj.stopPropagation) {
+							allStop = true;
+							break;
+						}
 					}
 				}
 
@@ -392,7 +405,7 @@ define(function() {
 			pop: function() {
 				var val = this.attr(this.length-1);
 				this.removeAttr(this.length-1);
-				this.length--;
+				if (this.length > 0) this.length--;
 				return val;
 			},
 			/**

@@ -10,80 +10,101 @@
 			}
 		});
 
-		require(['jfw.model', 'jfw.control', 'jfw.route'], function(fw){
+		require(['jfw.core', 'jfw.model', 'jfw.route', 'jfw.control', 'jfw.view'], function(fw){
 			window.fw = fw;
-			window.mod = fw.Model({
-				findOne: 'GET /auth/login/{:id}/{:login}',
-				findAll: 'POST /auth/find_all',
-			});
-			fw.Model.fixture('GET /auth/login/{:id}/{:login}', function(){ return { success: true } } );
-			fw.Model.fixture('POST /auth/find_all', function(){ return { data: [
-				{ id: 1 },
-				{ id: 2 },
-				{ id: 3 }
-			] } } );
-			mod.findOne({ id: 1 }, function(data){
-				var user = new mod(data, false);
-				console.log(user);
-			});
-			mod.findAll({ name: 'test' }, function(data){
-				var users = new fw.List(data);
-				console.log(users);
-			});
-			// var test = function() {
-			// 	var t1 = new Date();
-			// 	for (var i = 0; i < 1000000; i++) mod.findOne({ id: 1, login: 'test' }, function() { } );
-			// 	var t2 = new Date();
-			// 	document.write(+t2 - +t1);
-			// }
-			// test();
 
+			fw.Model.fixture('POST /users/add_user', function(req, res){
+				console.log('fixture request ->', req);
+				setTimeout(function(){
+					res({
+						ok: 1
+					});
+				}, 2000);
+			});
 
+			var User = fw.Model({
+				create: 'POST /users/add_user',
+				update: 'POST /users/edit_user',
+				destroy: 'GET /users/remove',
+				find: 'POST /users/get'
+			});
+
+			var user = new User();
+			user.attr('name', 'vasia');
+			user.create(function(res){
+				console.log('OK ->', res);
+			}, function(err_res){
+				console.log('Err ->', err_res);
+			});
+
+			fw.route.add('users/([0-9]+)', function(param){
+				console.log('route #users', param);
+			});
+
+			var SomeForm = fw.Control({
+				some_fun: function(){
+					this.element.append('<p>123</p>');
+				},
+				'ul li click': function(e){
+					e.data.self.some_fun();
+				},
+				'form submit': function(e){
+					// var user = new User(fw.utils.getFormData(this));
+					// user.create(function(){
+					// 	e.data.self.element.append('OK');
+					// });
+					// User.find(fw.utils.getFormData(this), function(){
+					// 	e.data.self.element.append('OK');
+					// });
+
+					// var obj = new User({ name: 'dgh' });
+					// obj.save();
+					// return false;
+				}
+			});
+
+			var form = new SomeForm('#wrap');
+
+			var some_view = fw.view('some_tpl');
+			var data = { items: [
+				{ label: 'text1' },
+				{ label: 'text2' },
+				{ label: 'text3' }
+			] };
+			console.log(some_view(data));
+
+			var data = { items: [
+				{ label: 'text71' },
+				{ label: 'text2' },
+				{ label: 'text3' }
+			] };
+			console.log(some_view(data));
 		});
+	</script>
+	<script type="text/ejs" id="some_tpl">
+		<ul>
+		<%
+			for (var i in items) {
+				%>
+				<li><%= items[i].label %></li>
+				<%
+			}
+		%>
+		</ul>
 	</script>
 </head>
 <body>
-	<div id="ttt"></div>
+	<div id="wrap">
+		<form id="some_form" onsubmit="return false;">
+			<ul>
+				<li>lorem 1</li>
+				<li>lorem 2</li>
+				<li>lorem 3</li>
+			</ul>
+			<input type="text" name="name" />
+			<input type="text" name="id" />
+			<input type="submit" value="Go" />
+		</form>
+	</div>
 </body>
 </html>
-
-<script type="text/ejs" id="list_tmp">
-	<ul>
-		<% for(var i in data_list) { %>
-		<li><a href="#test/<%= data_list[i].id %>">Test <%= data_list[i].name %></a></li>
-		<% } %>
-	</ul>
-</script>
-
-<script type="text/javascript">
-	// fw.route.add('test/([0-9]+)', function(param){
-	// 	console.log(param);
-	// });
-
-	// var Menu = fw.Control({
-	// 	init: function() {
-	// 		this.append(fw.view('list_tmp', { data_list: [
-	// 			{ id: 1, name: '111' },
-	// 			{ id: 2, name: '222' },
-	// 			{ id: 3, name: '333' }
-	// 		] }));
-	// 	},
-	// 	'li a click': function() {
-	// 		console.log('a click');
-	// 	},
-	// 	'li a mousemove': function() {
-	// 		console.log('a move');
-	// 	}
-	// });
-
-	// var m = new Menu('#ttt');
-
-	// var Data = fw.Model({
-	// 	findAll: 'GET ./data/alldata.json',
-	// 	findOne: 'GET ./data/{:id}.json',
-	// 	create: 'POST ./data/new.json',
-	// 	update: 'POST ./data/update_{:id}.json',
-	// 	destroy: 'GET ./data/remove_{:id}.json'
-	// });
-
-</script>

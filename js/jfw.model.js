@@ -158,6 +158,12 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 
 		var model_stat = {};
 
+		if (typeof param.find != 'undefined') {
+			buildStatFind(model_stat, param.find, 'find', function(res_json){
+				return res_json;
+			});
+		}
+
 		if (typeof param.findAll != 'undefined') {
 			buildStatFind(model_stat, param.findAll, 'findAll', function(res_json){
 				var ret = null;
@@ -197,8 +203,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 					case 'destroy':
 						var destroyFun = AjaxRequest(p[1], p[2]);
 						model_proto.destroy = function(cb, err) {
-							if (!this.id) return;
-							destroyFun.call(this, { id: this.id }, cb, err);
+							destroyFun.call(this, null, cb, err);
 						};
 						break;
 				}
