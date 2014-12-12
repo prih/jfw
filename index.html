@@ -12,99 +12,21 @@
 
 		require(['jfw.core', 'jfw.model', 'jfw.route', 'jfw.control', 'jfw.view'], function(fw){
 			window.fw = fw;
-
-			fw.Model.fixture('POST /users/add_user', function(req, res){
-				console.log('fixture request ->', req);
-				setTimeout(function(){
-					res({
-						ok: 1
-					});
-				}, 2000);
+			fw.Model.baseUrl = 'http://this.com';
+			
+			fw.Model.fixture('POST /test', function(req, res){
+				res({});
+			});
+			
+			var mod = fw.Model({
+				find: 'POST /test'
 			});
 
-			var User = fw.Model({
-				create: 'POST /users/add_user',
-				update: 'POST /users/edit_user',
-				destroy: 'GET /users/remove',
-				find: 'POST /users/get'
-			});
-
-			var user = new User();
-			user.attr('name', 'vasia');
-			user.create(function(res){
-				console.log('OK ->', res);
-			}, function(err_res){
-				console.log('Err ->', err_res);
-			});
-
-			fw.route.add('users/([0-9]+)', function(param){
-				console.log('route #users', param);
-			});
-
-			var SomeForm = fw.Control({
-				some_fun: function(){
-					this.element.append('<p>123</p>');
-				},
-				'ul li click': function(e){
-					e.data.self.some_fun();
-				},
-				'form submit': function(e){
-					// var user = new User(fw.utils.getFormData(this));
-					// user.create(function(){
-					// 	e.data.self.element.append('OK');
-					// });
-					// User.find(fw.utils.getFormData(this), function(){
-					// 	e.data.self.element.append('OK');
-					// });
-
-					// var obj = new User({ name: 'dgh' });
-					// obj.save();
-					// return false;
-				}
-			});
-
-			var form = new SomeForm('#wrap');
-
-			var some_view = fw.view('some_tpl');
-			var data = { items: [
-				{ label: 'text1' },
-				{ label: 'text2' },
-				{ label: 'text3' }
-			] };
-			console.log(some_view(data));
-
-			var data = { items: [
-				{ label: 'text71' },
-				{ label: 'text2' },
-				{ label: 'text3' }
-			] };
-			console.log(some_view(data));
+			mod.find({});
 		});
-	</script>
-	<script type="text/ejs" id="some_tpl">
-		<ul>
-		<%
-			for (var i in items) {
-				%>
-				<li><%= items[i].label %></li>
-				<%
-			}
-		%>
-		</ul>
 	</script>
 </head>
 <body>
-	<div id="wrap">
-		<form id="some_form" onsubmit="return false;">
-			<ul>
-				<li>lorem 1</li>
-				<li>lorem 2</li>
-				<li>lorem 3</li>
-			</ul>
-			<input type="text" name="name" />
-			<input type="text" name="id" />
-			<input type="submit" value="Go" />
-		</form>
-	</div>
+	<!-- BODY -->
 </body>
 </html>

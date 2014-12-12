@@ -64,15 +64,17 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			return;
 		}
 
-		var uri = fw.utils.parse_uri(ajax_param.url);
-		if (uri.pathname == '' && uri.hostname != '' && uri.protocol == '') {
-			uri.pathname = uri.hostname;
+		var url = ajax_param.url;
+		if (/^https?\:/.test(url)) {
+			var burl = (this.baseUrl) ? this.baseUrl : (fw.Model.baseUrl) ? fw.Model.baseUrl : null;
+			if (burl){
+				url = url.replace(burl, '');
+			}
 		}
-		uri.pathname += uri.search;
 
-		if (fixtures[uri.pathname]) {
-			if (typeof fixtures[uri.pathname][ajax_param.type] == 'function') {
-				fixtures[uri.pathname][ajax_param.type].call(this, ajax_param, function(ret){
+		if (fixtures[url]) {
+			if (typeof fixtures[url][ajax_param.type] == 'function') {
+				fixtures[url][ajax_param.type].call(this, ajax_param, function(ret){
 					if (typeof ajax_param.success == 'function' && ret !== false)
 						ajax_param.success.call(this, ret);
 					if (typeof ajax_param.error == 'function' && ret === false)
@@ -108,6 +110,14 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 	};
 
 	var AjaxRequest = function(type, url, data_cb) {
+		if (!/^https?\:/.test(url)){
+			var burl = (this.baseUrl) ? this.baseUrl : (fw.Model.baseUrl) ? fw.Model.baseUrl : null;
+			if (burl){
+				url = burl + url;
+			}
+		}
+		console.log(url);
+
 		var url_tpl = fw.utils.createModelUrlTemplate(url);
 
 		return function(data, suc, err) {
@@ -189,19 +199,19 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			if (p.length > 2) {
 				switch (i.toLowerCase()) {
 					case 'create':
-						var createFun = AjaxRequest(p[1], p[2]);
+						var createFun = AjaxRequest.call(param, p[1], p[2]);
 						model_proto.create = function(cb, err) {
 							createFun.call(this, null, cb, err);
 						};
 						break;
 					case 'update':
-						var updateFun = AjaxRequest(p[1], p[2]);
+						var updateFun = AjaxRequest.call(param, p[1], p[2]);
 						model_proto.update = function(cb, err) {
 							updateFun.call(this, null, cb, err);
 						};
 						break;
 					case 'destroy':
-						var destroyFun = AjaxRequest(p[1], p[2]);
+						var destroyFun = AjaxRequest.call(param, p[1], p[2]);
 						model_proto.destroy = function(cb, err) {
 							destroyFun.call(this, null, cb, err);
 						};

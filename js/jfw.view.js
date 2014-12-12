@@ -8,6 +8,9 @@ define(['jfw.core', 'jfw.ejs'], function(fw){
 	fw.view = function(template, data) {
 		var ejs = null;
 		if (/\.ejs$/.test(template)) {
+			if (this.view.version) {
+				template = template+'?bust=v'+this.view.version;
+			}
 			ejs = new fw.EJS({ url: template });
 		} else {
 			var tpl = null;
