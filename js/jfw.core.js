@@ -2,7 +2,7 @@
 	JavaScript Framework
 	for single page application
 
-	@version 0.0.1
+	@version 0.0.9
 	@author andrey prih <prihmail@gmail.com>
 */
 define(function() {
