@@ -116,7 +116,6 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 				url = burl + url;
 			}
 		}
-		console.log(url);
 
 		var url_tpl = fw.utils.createModelUrlTemplate(url);
 
