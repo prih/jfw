@@ -2,30 +2,26 @@
 	JavaScript Framework
 	for single page application
 
-	@version 0.0.9
+	Core module
+
+	@version 0.1.0
 	@author andrey prih <prihmail@gmail.com>
 */
-define(function() {
+
+define(['jfw.utils'], function(utils) {
 	var fw = {};
-	var utils = fw.utils || {};
 
 	/**
-		Простое наследование свойств
-		@param {Object} child Объект наследник
-		@param {Object} parent Расширяемый объект
+		Создание пространства имен
+		@param {Object} ns Корневой объект
+		@param {String} ns_string Строка с именами объектов разделенных точками
 	*/
-	utils.simpleExtend = function(child, parent, own){
-		own = own || false;
-		for (var i in parent) {
-			if (typeof child[i] == 'undefined') {
-				if (own && parent.hasOwnProperty(parent[i]))
-					child[i] = parent[i];
-				if (!own) child[i] = parent[i];
-			}
-		}
-	};
-
 	fw.extend = function(ns, ns_string) {
+		if (!ns_string && typeof ns == 'string') {
+			ns_string = ns;
+			ns = fw;
+		}
+
 		var parts = ns_string.split('.'), parent = ns, pl, i;
 		if (parts[0] == "fw") parts = parts.slice(1);
 		pl = parts.length;
@@ -38,35 +34,65 @@ define(function() {
 		return parent;
 	};
 
+	if (!Array.prototype.indexOf) {
+		Array.prototype.indexOf = function(searchElement, fromIndex) {
+			var k;
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+			var O = Object(this);
+			var len = O.length >>> 0;
+			if (len === 0) {
+				return -1;
+			}
+			var n = +fromIndex || 0;
+			if (Math.abs(n) === Infinity) {
+				n = 0;
+			}
+			if (n >= len) {
+				return -1;
+			}
+			k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+			while (k < len) {
+				if (k in O && O[k] === searchElement) {
+					return k;
+				}
+				k++;
+			}
+			return -1;
+		};
+	}
+
 	/**
-		Создание нового класса
-		@param {Object} stat Статические свойства класса
+		Создание нового "класса" без prototype
+		@param {Object} stat Статические свойства
 		@param {Object} param Свойства и методы объектов
-		@return {Function} Функция конструктор класса
+		@return {Function} Функция конструктор
 	*/
 	fw.Construct = function(stat, param){
 		return fw.Construct.extend({}, stat, param);
 	};
 
 	/**
-		Создание нового класса с возможностью
-		@param {Object} ext Объект который будет расширять класс
-		@param {Object} stat Статические свойства класса
+		Создание нового "класса" с возможностью
+		@param {Object} proto Объект который будет расширять класс
+		@param {Object} stat Статические свойства
 		@param {Object} param Свойства и методы объектов
-		@return {Function} Функция конструктор класса
+		@return {Function} Функция конструктор
 	*/
-	fw.Construct.extend = function(ext, stat, param){
+	fw.Construct.extend = function(proto, stat, param){
 		if (typeof param == 'undefined') {
 			param = stat;
 			stat = {};
 		}
 		if (typeof param == 'undefined') {
-			param = ext;
-			ext = {};
+			param = proto;
+			proto = {};
 		}
 
-		ext = ext || {};
+		proto = proto || {};
 		param = param || {};
+		stat = stat || {};
 
 		var Construct = function(){
 			for (var i in param) {
@@ -77,8 +103,8 @@ define(function() {
 			}
 		};
 
-		Construct.prototype = ext;
-		Construct.prototype['superclass'] = ext;
+		Construct.prototype = proto;
+		Construct.prototype['superclass'] = proto;
 		Construct.prototype['constructor'] = Construct;
 
 		for (var i in stat) {
@@ -89,9 +115,14 @@ define(function() {
 	};
 
 	/**
-		Массив обработчиков событий Map
+		Конструктор события Map
+		@constructor
 		@private
 		@see fw.Map.extend
+		@param {String} how Тип события (add, set, remove, change)
+		@param {String} key Ключ (свойство) объекта Map
+		@param old_val старое значение свойство, или undefined
+		@param new_val новое значение свойства
 	*/
 
 	var MapEvent = function(how, key, old_val, new_val) {
@@ -103,32 +134,32 @@ define(function() {
 	};
 
 	/**
-		Создание нового класса Map
+		Создание нового "класса" Map
 		@see fw.Construct.extend
 		@private
-		@param {Object} ext Объект который будет расширять класс
-		@param {Object} stat Статические свойства класса
+		@param {Object} proto Объект prototype
+		@param {Object} stat Статические свойства "класса"
 		@param {Object} default_param Свойства и методы Map объекта
-		@returns {Function} Функция конструктор класса Map
+		@returns {Function} Функция конструктор "класса" Map
 	*/
-	var map = function(ext, stat, default_param){
+	var map = function(proto, stat, default_param){
 		if (typeof default_param == 'undefined') {
 			default_param = stat;
 			stat = {};
 		}
 
 		if (typeof default_param == 'undefined') {
-			default_param = ext;
-			ext = {};
+			default_param = proto;
+			proto = {};
 		}
 
-		ext = ext || {};
+		proto = proto || {};
 		default_param = default_param || {};
 
 		var map_proto = {
 			/**
 				Добавляет или изменяет значение свойства
-				@param {String|Number|Object} key Название свойства
+				@param key Название свойства
 				@param val Значение свойства
 				@returns Значение свойства или объект со всеми свойствами
 			*/
@@ -307,9 +338,9 @@ define(function() {
 			}
 		};
 
-		utils.simpleExtend(ext, map_proto);
+		utils.simpleExtend(proto, map_proto);
 
-		return fw.Construct.extend(ext, stat, {
+		return fw.Construct.extend(proto, stat, {
 			'init': function(param){
 				this.events_fifo = [];
 				this.events_work = false;
@@ -340,9 +371,8 @@ define(function() {
 				*	Уникальный идентификатор объекта Map
 				*/
 				this.map_events.length++;
-				var __id = 'map'+this.map_events.length;
-				this.__id = __id;
-				this.map_events[__id] = {};
+				this.__id = 'map'+this.map_events.length;
+				this.map_events[this.__id] = {};
 			}
 		});
 	};
@@ -354,38 +384,29 @@ define(function() {
 	*/
 
 	fw.Map = map();
-
-	/**
-		Создание нового класса Map
-		@see map
-		@param {Object} ext Объект который будет расширять класс
-		@param {Object} stat Статические свойства класса
-		@param {Object} default_param Свойства и методы Map объекта
-		@returns {Function} Функция конструктор класса Map
-	*/
 	fw.Map.extend = map;
 
 	/**
 		Создает новый класс List
 		@see fw.Map.extend
 		@private
-		@param {Object} ext Объект который будет расширять класс
+		@param {Object} proto Объект который будет расширять класс
 		@param {Object} stat Статические свойства класса
 		@param {Object} default_param Свойства и методы List объекта
 		@returns {Function} Функция конструктор класса List
 	*/
-	var list = function(ext, stat, default_param){
+	var list = function(proto, stat, default_param){
 		if (typeof default_param == 'undefined') {
 			default_param = stat;
 			stat = {};
 		}
 
 		if (typeof default_param == 'undefined') {
-			default_param = ext;
-			ext = {};
+			default_param = proto;
+			proto = {};
 		}
 
-		ext = ext || {};
+		proto = proto || {};
 		default_param = default_param || [];
 
 		var list_proto = {
@@ -483,9 +504,9 @@ define(function() {
 			}
 		};
 
-		utils.simpleExtend(ext, list_proto);
+		utils.simpleExtend(proto, list_proto);
 
-		return fw.Map.extend(ext, stat, {
+		return fw.Map.extend(proto, stat, {
 			'init': function(param){
 				utils.simpleExtend(this, default_param);
 				this.length = 0;
@@ -510,15 +531,6 @@ define(function() {
 		@see list
 	*/
 	fw.List = list();
-
-	/**
-		Создает новый класс List
-		@see list
-		@param {Object} ext Объект который будет расширять класс
-		@param {Object} stat Статические свойства класса
-		@param {Object} default_param Свойства и методы List объекта
-		@returns {Function} Функция конструктор класса List
-	*/
 	fw.List.extend = list;
 
 	fw.compute = function(def_val, prop) {
@@ -548,6 +560,13 @@ define(function() {
 		com['trigger'] = map.trigger.bind(map);
 
 		return com;
+	};
+
+	fw.EvalString = function(str){
+		this.template = utils.createStringTemplate(str);
+	};
+	fw.EvalString.prototype.make = function(){
+		return utils.makeStringTemplate(this.template, this);
 	};
 
 	fw.utils = utils;

@@ -1,64 +1,14 @@
 /**
 	JavaScript Framework Model
 
-	@version 0.0.9
+	@version 0.1.0
 	@author andrey prih <prihmail@gmail.com>
 */
 define(['jfw.core', 'jquery'], function(fw, jQuery){
-	fw.utils.createModelUrlTemplate = function(str) {
-		var re = new RegExp('\{\:(.*?)\}', 'g');
-		var res = null;
-		var tpl = '\''+str+'\'';
-		while ((res = re.exec(str)) != null) {
-			tpl = tpl.replace(res[0], '\'+tpl_data[\''+res[1]+'\']+\'');
-		}
-		return tpl;
-	};
-
-	fw.utils.makeModelUrlTemplate = function(tpl_str, tpl_data) {
-		return eval(tpl_str);
-	};
-
-	fw.utils.buildString = function(str, data) {
-		var ret = str;
-		var re = new RegExp('\{\:(.*?)\}', 'g');
-		var res = null;
-		while ((res = re.exec(str)) != null) {
-			if (typeof data[res[1]] != 'undefined') {
-				ret = ret.replace(res[0], data[res[1]]);
-				delete data[res[1]];
-			} else {
-				ret = ret.replace(res[0], '');
-			}
-		}
-		return ret;
-	};
-
-	fw.utils.getFormData = function(form) {
-		var ret = {};
-		jQuery(form).serializeArray().forEach(function(obj){
-			ret[obj.name] = obj.value;
-		});
-		return ret;
-	};
-
-	fw.utils.parse_uri = function(href) {
-		var match = href.match(/^(https?\:)?(?:\/\/)?(([^:\/?#]*)(?:\:([0-9]+))?)((?:\/)?[^?#]*)(\?[^#]*|)(#.*|)$/);
-		return match && {
-			protocol: match[1],
-			host: match[2],
-			hostname: match[3],
-			port: match[4],
-			pathname: match[5],
-			search: match[6],
-			hash: match[7]
-		}
-	};
-
 	var fixtures = {};
 	var fixtures_enable = false;
 	
-	fw.utils.ajax = function(ajax_param) {
+	var ajax = function(ajax_param) {
 		if (!fixtures_enable) {
 			jQuery.ajax(ajax_param);
 			return;
@@ -111,13 +61,13 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 
 	var AjaxRequest = function(type, url, data_cb) {
 		if (!/^https?\:/.test(url)){
-			var burl = (this.baseUrl) ? this.baseUrl : (fw.Model.baseUrl) ? fw.Model.baseUrl : null;
+			var burl = (fw.Model.baseUrl) ? fw.Model.baseUrl : null;
 			if (burl){
 				url = burl + url;
 			}
 		}
 
-		var url_tpl = fw.utils.createModelUrlTemplate(url);
+		var url_tpl = fw.utils.createStringTemplate(url);
 
 		return function(data, suc, err) {
 			data = data  || this.attr();
@@ -138,7 +88,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 				}
 			};
 			if (typeof err == 'function') ajax_param.error = err;
-			fw.utils.ajax(ajax_param);
+			ajax(ajax_param);
 		}
 	};
 
@@ -265,6 +215,14 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 				}
 			}
 		}
+	};
+
+	fw.Model.getFormData = function(form) {
+		var ret = {};
+		jQuery(form).serializeArray().forEach(function(obj){
+			ret[obj.name] = obj.value;
+		});
+		return ret;
 	};
 
 	return fw;

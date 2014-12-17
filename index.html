@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Example</title>
@@ -6,23 +7,13 @@
 		require.config({
 			baseUrl: 'js',
 			paths: {
-				jquery: 'jquery-1.10.1.min'
+				history: 'history.min',
+				jquery: 'jquery-1.11.1.min'
 			}
 		});
 
 		require(['jfw.core', 'jfw.model', 'jfw.route', 'jfw.control', 'jfw.view'], function(fw){
 			window.fw = fw;
-			fw.Model.baseUrl = 'http://this.com';
-			
-			fw.Model.fixture('POST /test', function(req, res){
-				res({});
-			});
-			
-			var mod = fw.Model({
-				find: 'POST /test'
-			});
-
-			mod.find({});
 		});
 	</script>
 </head>

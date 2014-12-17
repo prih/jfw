@@ -1,7 +1,7 @@
 /**
 	JavaScript Framework View
 
-	@version 0.0.9
+	@version 0.1.0
 	@author andrey prih <prihmail@gmail.com>
 */
 define(['jfw.core', 'jfw.ejs'], function(fw){

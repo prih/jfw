@@ -1,7 +1,7 @@
 /**
 	JavaScript Framework Control
 
-	@version 0.0.9
+	@version 0.1.0
 	@author andrey prih <prihmail@gmail.com>
 */
 define(['jfw.core', 'jquery'], function(fw, jQuery){
@@ -18,7 +18,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 				if (typeof param.init == 'function') param.init.apply(this, arguments);
 				for (var i in param) {
 					if (i != 'init') {
-						var p = i.match('^(.*)\\s(.*)$');
+						var p = i.match('^(.*)\\s+(.*)$');
 						if (p && p.length > 2) {
 							param[i].control = this;
 							var cb = param[i];

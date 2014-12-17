@@ -1,7 +1,7 @@
 /**
 	JavaScript Framework Hash Routing
 
-	@version 0.0.9
+	@version 0.1.0
 	@author andrey prih <prihmail@gmail.com>
 */
 define(['jfw.core', 'history'], function(fw){
@@ -23,7 +23,7 @@ define(['jfw.core', 'history'], function(fw){
 		route.attr('hash', window.location.hash);
 	};
 
-	route.default_action = function() {};
+	route.default_action = null;
 
 	route.bind('hash', function(e){
 		var hash = this.hash.replace(/^#/, '');
@@ -35,7 +35,8 @@ define(['jfw.core', 'history'], function(fw){
 				return;
 			}
 		}
-		this.default_action.call(this, param, e);
+		if (typeof this.default_action == 'function')
+			this.default_action.call(this, param, e);
 	});
 
 	route.attr('hash', window.location.hash);
