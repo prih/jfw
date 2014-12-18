@@ -31,6 +31,16 @@ Install
 </body>
 </html>
 ```
+Основные модули
+---
+
+* [jfw.core.js](#jfwcorejs)
+* [jfw.utils.js](#jfwutilsjs)
+* [jfw.route.js](#jfwroutejs)
+* [jfw.view.js](#jfwviewjs)
+* [jfw.control.js](#jfwcontroljs)
+* [jfw.model.js](#jfwmodeljs)
+* [jfw.storage.js](#jfwstoragejs)
 
 jfw.core.js
 ---
