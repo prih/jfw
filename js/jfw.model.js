@@ -15,12 +15,6 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 		}
 
 		var url = ajax_param.url;
-		if (/^https?\:/.test(url)) {
-			var burl = (this.baseUrl) ? this.baseUrl : (fw.Model.baseUrl) ? fw.Model.baseUrl : null;
-			if (burl){
-				url = url.replace(burl, '');
-			}
-		}
 
 		if (fixtures[url]) {
 			if (typeof fixtures[url][ajax_param.type] == 'function') {
@@ -74,7 +68,7 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			
 			var ajax_param = {
 				type: type.toUpperCase(),
-				url: fw.utils.makeModelUrlTemplate(url_tpl, data),
+				url: fw.utils.makeStringTemplate(url_tpl, data),
 				dataType: 'json',
 				cache: false,
 				data: data
@@ -189,17 +183,23 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 			var p = req.match('^(GET|POST|PUT|DELETE)[\\s]+(.*)$');
 			if (p.length == 3) {
 				fixtures_enable = true;
-				fixtures[p[2]] = {};
-				fixtures[p[2]][p[1]] = handler;
-				if (p[2].match(re)) {
+
+				var burl = (fw.Model.baseUrl) ? fw.Model.baseUrl : '';
+				var url = burl + p[2];
+				var method = p[1];
+
+				fixtures[url] = {};
+				fixtures[url][method] = handler;
+				
+				if (url.match(re)) {
 					var data = [];
 					var res = null;
-					while ((res = re.exec(p[2])) != null) {
+					while ((res = re.exec(url)) != null) {
 						data.push(res[1]);
 					}
-					fixtures[p[2]].fields = data;
-					var reg_str = p[2].replace(/\{\:.*?\}/g, '(.+?)');
-					fixtures[p[2]].reg = new RegExp(reg_str, 'g');
+					fixtures[url].fields = data;
+					var reg_str = url.replace(/\{\:.*?\}/g, '(.+?)');
+					fixtures[url].reg = new RegExp(reg_str, 'g');
 				}
 			}
 		};

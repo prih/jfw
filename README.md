@@ -1,12 +1,13 @@
 JFW
 ===
 
-JavaScript Framework
+JavaScript Framework v0.1.0
 
 Install
 ---
 Весь функционал построен по идиологии AMD, все модули поддерживают асинхронную загрузку с помощю [RequireJS](http://requirejs.org/).
 ``` html
+<!DOCTYPE html>
 <html>
 <head>
   <title>Example</title>
@@ -15,17 +16,18 @@ Install
     require.config({
       baseUrl: 'js',
       paths: {
-        jquery: 'jquery-1.10.1.min'
+        history: 'history.min',
+        jquery: 'jquery-1.11.1.min'
       }
     });
 
-    require(['jfw.core', 'jfw.route', 'jfw.view', 'jfw.control', 'jfw.model'],
-    function(fw){
-      console.log(fw);
+    require(['jfw.core', 'jfw.model', 'jfw.route', 'jfw.control', 'jfw.view'], function(fw){
+      window.fw = fw;
     });
   </script>
 </head>
 <body>
+  <!-- BODY -->
 </body>
 </html>
 ```
@@ -38,6 +40,7 @@ jfw.core.js
 * [fw.Map](#fwmap)
 * [fw.List](#fwlist)
 * [fw.compute](#fwcompute)
+* [fw.EvalString](#fwevalstring)
 
 ``` js
 require(['jfw.core'], function(fw){
@@ -51,7 +54,7 @@ require(['jfw.core'], function(fw){
 fw.extend(root_object, namespace) -> {Object}
 ```
 
-Данный метод реализует Namespace шаблон. Функция получает объект в котором требуеться создать (получить) необходимое пространство имен.
+Данный метод реализует Namespace шаблон проектирования. Функция получает объект в котором требуеться создать (получить) необходимое пространство имен.
 
 Пример:
 ``` js
@@ -147,7 +150,7 @@ console.log(Foo.stat1); // test1
 console.log(Foo.stat2); // 123
 ```
 
-Свойство **constructor**, у объектов, указывает на функцию "класса":
+Свойство **constructor**, у объектов, указывает на функцию конструктор "класса":
 ``` js
 var Foo = fw.Construct.extend({}, {
   count: 0
@@ -450,4 +453,28 @@ comp.on('change', function(e){
 
 comp.trigger('change', 'val', 456, 789);
 // 456 789
+```
+
+### fw.EvalString
+
+```
+new fw.EvalString({String}) -> {Object}
+```
+
+Создает объект с одним методом .make() -> {String}. Конструктору передается строка - шаблон.
+Метод .make() генерирует строку подставляя в качестве значений свойства данного объекта.
+
+Синтаксис шаблона:
+
+```
+{:имя_свойства_обекта}
+```
+
+К примеру:
+
+```
+var estr = new fw.EvalString('foo{:some_prop}bar');
+
+estr.some_prop = '/123/';
+estr.make(); // foo/123/bar
 ```

@@ -562,6 +562,12 @@ define(['jfw.utils'], function(utils) {
 		return com;
 	};
 
+	/**
+		EvalString - компилируемый шаблон строки
+		@constructor
+		@see utils.createStringTemplate
+		@see utils.makeStringTemplate
+	*/
 	fw.EvalString = function(str){
 		this.template = utils.createStringTemplate(str);
 	};
