@@ -2,14 +2,15 @@
 <html>
 <head>
 	<title>Example</title>
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="js/history.min.js"></script>
+	<!--[if lte IE 7]>
+		<script type="text/javascript" src="js/history.ielte7.min.js"></script>
+	<![endif]-->
 	<script type="text/javascript" src="js/require.js"></script>
 	<script type="text/javascript">
 		require.config({
-			baseUrl: 'js',
-			paths: {
-				history: 'history.min',
-				jquery: 'jquery-1.11.1.min'
-			}
+			baseUrl: 'js'
 		});
 
 		require(['jfw.core', 'jfw.model', 'jfw.route', 'jfw.control', 'jfw.view'], function(fw){

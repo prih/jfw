@@ -1,10 +1,10 @@
 /**
 	JavaScript Framework Hash Routing
 
-	@version 0.1.0
+	@version 0.1.1
 	@author andrey prih <prihmail@gmail.com>
 */
-define(['jfw.core', 'history'], function(fw){
+define(['jfw.core'], function(fw){
 	var route_rules = {};
 
 	var route = new fw.Map({
@@ -20,6 +20,14 @@ define(['jfw.core', 'history'], function(fw){
 	});
 
 	window.onpopstate = function() {
+		route.attr('location', {
+			host: window.location.host,
+			pathname: window.location.pathname,
+			search: window.location.search,
+			hash: window.location.hash,
+			href: window.location.href
+		});
+
 		route.attr('hash', window.location.hash);
 	};
 
@@ -37,6 +45,14 @@ define(['jfw.core', 'history'], function(fw){
 		}
 		if (typeof this.default_action == 'function')
 			this.default_action.call(this, param, e);
+	});
+
+	route.attr('location', {
+		host: window.location.host,
+		pathname: window.location.pathname,
+		search: window.location.search,
+		hash: window.location.hash,
+		href: window.location.href
 	});
 
 	route.attr('hash', window.location.hash);

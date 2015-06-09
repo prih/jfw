@@ -1,10 +1,10 @@
 /**
 	JavaScript Framework Model
 
-	@version 0.1.0
+	@version 0.1.1
 	@author andrey prih <prihmail@gmail.com>
 */
-define(['jfw.core', 'jquery'], function(fw, jQuery){
+define(['jfw.core'], function(fw){
 	var fixtures = {};
 	var fixtures_enable = false;
 	
@@ -65,6 +65,9 @@ define(['jfw.core', 'jquery'], function(fw, jQuery){
 
 		return function(data, suc, err) {
 			data = data  || this.attr();
+
+			var csrf_token = fw.utils.getCookie('csrf_token');
+			if(csrf_token) data.csrf_token = csrf_token;
 			
 			var ajax_param = {
 				type: type.toUpperCase(),

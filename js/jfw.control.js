@@ -4,7 +4,7 @@
 	@version 0.1.0
 	@author andrey prih <prihmail@gmail.com>
 */
-define(['jfw.core', 'jquery'], function(fw, jQuery){
+define(['jfw.core'], function(fw){
 	fw.Control = function(proto, param) {
 		if (typeof param == 'undefined') {
 			param = proto;

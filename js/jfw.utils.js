@@ -4,7 +4,7 @@
 
 	Utils module
 
-	@version 0.1.0
+	@version 0.1.1
 	@author andrey prih <prihmail@gmail.com>
 */
 
@@ -62,6 +62,13 @@ define(function(){
 			hash: match[7]
 		}
 	};
+
+	utils.getCookie = function(name) {
+		var matches = document.cookie.match(new RegExp(
+			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+		));
+		return matches ? decodeURIComponent(matches[1]) : undefined;
+	}
 
 	return utils;
 });
