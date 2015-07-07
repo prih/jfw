@@ -63,7 +63,7 @@ define(['jfw.core'], function(fw){
 
 		var url_tpl = fw.utils.createStringTemplate(url);
 
-		return function(data, suc, err) {
+		return function(data, suc) {
 			data = data  || this.attr();
 
 			var csrf_token = fw.utils.getCookie('csrf_token');
@@ -76,15 +76,25 @@ define(['jfw.core'], function(fw){
 				cache: false,
 				data: data
 			};
-			if (typeof suc == 'function') ajax_param.success = function(res_data){
-				if (typeof data_cb == 'function') {
-					var ret = data_cb.call(this, res_data);
-					suc.call(this, ret);
-				} else {
-					suc.call(this, res_data);
-				}
-			};
-			if (typeof err == 'function') ajax_param.error = err;
+			if (typeof suc == 'function') {
+				ajax_param.success = function(res_data){
+					if (typeof data_cb == 'function') {
+						var ret = data_cb.call(this, res_data);
+						suc.call(this, null, ret);
+					} else {
+						suc.call(this, null, res_data);
+					}
+				};
+
+				ajax_param.error = function(jqXHR){
+					if (typeof data_cb == 'function') {
+						suc.call(this, jqXHR, null);
+					} else {
+						suc.call(this, jqXHR, null);
+					}
+				};
+			}
+			
 			ajax(ajax_param);
 		}
 	};
